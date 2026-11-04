@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="رحال، مجلة رقمية تكتشف العالم وتقرأ ما وراءه. الثقافة والمجتمع والعلوم والتاريخ والاستكشاف.">
+<title>RAHAL | رحال - مجلة رقمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--green:#142c2a;--gold:#d8b879;--cream:#f4ebdd;--dark:#252827;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--dark);font-family:'Cairo',Arial,sans-serif}
+header{background:var(--green);color:white;padding:18px 7%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.logo{font-size:29px;font-weight:800;letter-spacing:3px;color:var(--gold)}
+.logo span{font-size:17px;letter-spacing:0;margin-right:8px}
+nav{display:flex;gap:22px;flex-wrap:wrap}
+nav a{color:white;text-decoration:none;font-size:14px}
+nav a:hover{color:var(--gold)}
+select{padding:9px;border-radius:6px;border:1px solid #777;background:var(--green);color:white}
+.hero{padding:85px 8%;background:linear-gradient(90deg,rgba(20,44,42,.94),rgba(20,44,42,.65)),url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1600') center/cover;color:white;min-height:390px;display:flex;align-items:center}
+.hero-content{max-width:680px}
+.eyebrow{color:var(--gold);font-size:14px;letter-spacing:2px}
+h1{font-size:clamp(36px,6vw,64px);line-height:1.3;margin:15px 0}
+.hero p{font-size:18px;line-height:2;color:#eee}
+.btn{display:inline-block;background:var(--gold);color:var(--green);padding:12px 25px;text-decoration:none;font-weight:800;border-radius:3px;margin-top:15px}
+.container{max-width:1150px;margin:auto;padding:55px 22px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #c9bdab;margin-bottom:28px}
+.section-head h2{font-size:25px;color:var(--green)}
+.section-head span{color:#8c754a;font-size:13px}
+.featured{display:grid;grid-template-columns:1.1fr 1fr;background:white;overflow:hidden}
+.featured img{width:100%;height:100%;min-height:290px;object-fit:cover}
+.featured-content{padding:35px}
+.tag{color:#92713b;font-size:13px;font-weight:700}
+.featured h3{font-size:27px;color:var(--green);line-height:1.6}
+.featured p{line-height:2;color:#666}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:white;overflow:hidden}
+.card img{width:100%;height:195px;object-fit:cover;display:block}
+.card-content{padding:20px}
+.card h3{color:var(--green);font-size:19px;line-height:1.6}
+.card p{color:#777;line-height:1.9;font-size:14px}
+.categories{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.category{background:var(--green);color:white;text-align:center;padding:24px 8px;border-bottom:3px solid var(--gold);font-weight:700}
+footer{background:var(--green);color:white;padding:40px 8%;text-align:center}
+footer strong{color:var(--gold);font-size:24px}
+footer p{color:#ddd;font-size:14px;line-height:2}
+@media(max-width:750px){
+header{justify-content:center;text-align:center}
+nav{justify-content:center;gap:12px}
+.hero{padding:65px 7%}
+.featured{grid-template-columns:1fr}
+.featured img{height:220px;min-height:0}
+.grid{grid-template-columns:1fr}
+.categories{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">RAHAL <span>رحال</span></div>
+<nav>
+<a href="#home" data-t="home">الرئيسية</a>
+<a href="#culture" data-t="culture">الثقافة</a>
+<a href="#society" data-t="society">المجتمع</a>
+<a href="#science" data-t="science">العلوم</a>
+<a href="#history" data-t="history">التاريخ</a>
+<a href="#explore" data-t="explore">الاستكشاف</a>
+</nav>
+<select id="language" aria-label="Language">
+<option value="ar">العربية</option>
+<option value="fr">Français</option>
+<option value="en">English</option>
+</select>
+</header>
+
+<section class="hero" id="home">
+<div class="hero-content">
+<div class="eyebrow" data-t="eyebrow">مجلة رقمية مستقلة</div>
+<h1 data-t="headline">نكتشف العالم، ونقرأ ما وراءه.</h1>
+<p data-t="intro">مساحة للمعرفة والفضول، نروي فيها قصص الإنسان والمكان والعلم والتاريخ.</p>
+<a class="btn" href="#latest" data-t="discover">اكتشف رحال</a>
+</div>
+</section>
+
+<main class="container">
+<div class="section-head" id="latest">
+<h2 data-t="latest">أحدث الموضوعات</h2>
+<span>RAHAL JOURNAL</span>
+</div>
+
+<section class="featured">
+<img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=1000" alt="عمارة مدينة قديمة">
+<div class="featured-content">
+<div class="tag" data-t="special">ملف خاص · ثقافة ومجتمع</div>
+<h3 data-t="featureTitle">المدن القديمة: ذاكرة الأماكن التي تسكننا</h3>
+<p data-t="featureText">وراء الأزقة والأبواب العتيقة حكايات أجيال كاملة. كيف تحفظ المدن ذاكرتها؟ وماذا نفقد عندما تتغير ملامحها؟</p>
+<a href="#categories" class="btn" data-t="read">اكتشف المزيد</a>
+</div>
+</section>
+
+<div class="section-head" id="categories" style="margin-top:65px">
+<h2 data-t="sections">عالم رحال</h2>
+<span>EXPLORE · LEARN · DISCOVER</span>
+</div>
+<div class="categories">
+<div class="category" id="culture" data-t="culture">الثقافة</div>
+<div class="category" id="society" data-t="society">المجتمع</div>
+<div class="category" id="science" data-t="science">العلوم</div>
+<div class="category" id="history" data-t="history">التاريخ</div>
+<div class="category" id="explore" data-t="explore">الاستكشاف</div>
+</div>
+
+<div class="section-head" style="margin-top:65px">
+<h2 data-t="picks">مختارات رحال</h2>
+<span>EDITOR'S PICKS</span>
+</div>
+<div class="grid">
+<article class="card">
+<img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=700" alt="مختبر علمي">
+<div class="card-content">
+<div class="tag" data-t="science">العلوم</div>
+<h3 data-t="card1">أسئلة علمية تغير نظرتنا إلى العالم</h3>
+<p data-t="desc1">رحلة لفهم الاكتشافات والأفكار التي توسع آفاق المعرفة.</p>
+</div>
+</article>
+<article class="card">
+<img src="https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=700" alt="مخطوطات وكتب">
+<div class="card-content">
+<div class="tag" data-t="history">التاريخ</div>
+<h3 data-t="card2">حين تتحدث إلينا صفحات التاريخ</h3>
+<p data-t="desc2">قراءة في أحداث وشخصيات صنعت ملامح الحاضر.</p>
+</div>
+</article>
+<article class="card">
+<img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?w=700" alt="منظر طبيعي">
+<div class="card-content">
+<div class="tag" data-t="explore">الاستكشاف</div>
+<h3 data-t="card3">عوالم تستحق أن نكتشفها</h3>
+<p data-t="desc3">من الطبيعة إلى الأماكن البعيدة، نقترب من العالم بفضول.</p>
+</div>
+</article>
+</div>
+</main>
+
+<footer>
+<strong>RAHAL | رحال</strong>
+<p data-t="footer">نكتشف العالم، ونقرأ ما وراءه.<br>مجلة رقمية للثقافة والمعرفة والاستكشاف.</p>
+<p>© 2026 RAHAL. All rights reserved.</p>
+</footer>
+
+<script>
+const translations={
+ar:{home:"الرئيسية",culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف",eyebrow:"مجلة رقمية مستقلة",headline:"نكتشف العالم، ونقرأ ما وراءه.",intro:"مساحة للمعرفة والفضول، نروي فيها قصص الإنسان والمكان والعلم والتاريخ.",discover:"اكتشف رحال",latest:"أحدث الموضوعات",special:"ملف خاص · ثقافة ومجتمع",featureTitle:"المدن القديمة: ذاكرة الأماكن التي تسكننا",featureText:"وراء الأزقة والأبواب العتيقة حكايات أجيال كاملة. كيف تحفظ المدن ذاكرتها؟ وماذا نفقد عندما تتغير ملامحها؟",read:"اكتشف المزيد",sections:"عالم رحال",picks:"مختارات رحال",card1:"أسئلة علمية تغير نظرتنا إلى العالم",desc1:"رحلة لفهم الاكتشافات والأفكار التي توسع آفاق المعرفة.",card2:"حين تتحدث إلينا صفحات التاريخ",desc2:"قراءة في أحداث وشخصيات صنعت ملامح الحاضر.",card3:"عوالم تستحق أن نكتشفها",desc3:"من الطبيعة إلى الأماكن البعيدة، نقترب من العالم بفضول.",footer:"نكتشف العالم، ونقرأ ما وراءه.<br>مجلة رقمية للثقافة والمعرفة والاستكشاف."},
+fr:{home:"Accueil",culture:"Culture",society:"Société",science:"Sciences",history:"Histoire",explore:"Exploration",eyebrow:"Magazine numérique indépendant",headline:"Découvrir le monde, lire au-delà.",intro:"Un espace de connaissance et de curiosité, où nous racontons les histoires des personnes, des lieux, des sciences et de l'histoire.",discover:"Découvrir RAHAL",latest:"Derniers articles",special:"Dossier spécial · Culture et société",featureTitle:"Les villes anciennes : la mémoire des lieux qui nous habitent",featureText:"Derrière les ruelles et les portes anciennes se cachent des histoires de générations. Comment les villes préservent-elles leur mémoire ?",read:"En savoir plus",sections:"L'univers RAHAL",picks:"Sélection RAHAL",card1:"Des questions scientifiques qui changent notre vision du monde",desc1:"Un voyage à travers les découvertes qui élargissent nos connaissances.",card2:"Quand les pages de l'histoire nous parlent",desc2:"Des événements et des personnages qui ont façonné le présent.",card3:"Des mondes à découvrir",desc3:"De la nature aux lieux lointains, explorons le monde avec curiosité.",footer:"Découvrir le monde, lire au-delà.<br>Un magazine numérique de culture et de découverte."},
+en:{home:"Home",culture:"Culture",society:"Society",science:"Science",history:"History",explore:"Exploration",eyebrow:"Independent digital magazine",headline:"Discover the world. Read beyond.",intro:"A space for knowledge and curiosity, telling stories about people, places, science and history.",discover:"Discover RAHAL",latest:"Latest stories",special:"Special feature · Culture & Society",featureTitle:"Old cities: the memory of places that live within us",featureText:"Behind ancient streets and doors lie generations of stories. How do cities preserve their memory?",read:"Discover more",sections:"The world of RAHAL",picks:"RAHAL selections",card1:"Scientific questions that change how we see the world",desc1:"A journey through discoveries that expand our knowledge.",card2:"When the pages of history speak",desc2:"Events and people that shaped the present.",card3:"Worlds waiting to be discovered",desc3:"From nature to distant places, explore the world with curiosity.",footer:"Discover the world. Read beyond.<br>A digital magazine for culture, knowledge and exploration."}
+};
+document.getElementById("language").addEventListener("change",function(){
+const lang=this.value;
+document.documentElement.lang=lang;
+document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+document.querySelectorAll("[data-t]").forEach(el=>{
+const key=el.dataset.t;
+if(translations[lang][key])el.innerHTML=translations[lang][key];
+});
+});
+</script>
+</body>
+</html>
