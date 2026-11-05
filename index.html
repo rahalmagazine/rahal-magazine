@@ -218,6 +218,31 @@ if(translations[lang][key])el.innerHTML=translations[lang][key];
    '</div>';
   h.appendChild(d);
 })();
+</script><script>
+(function(){
+  var SB="https://fiqwenrnvwiiondcztpm.supabase.co";
+  var KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
+  var cats={culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف"};
+  var grid=document.querySelector(".grid");
+  if(!grid)return;
+  fetch(SB+"/rest/v1/articles?select=slug,category,title,excerpt,image_url&published=eq.true&order=created_at.desc&limit=6",{headers:{apikey:KEY}})
+  .then(function(r){if(!r.ok)throw 0;return r.json();})
+  .then(function(rows){
+    rows.slice().reverse().forEach(function(a){
+      var c=document.createElement("article");c.className="card";
+      if(a.image_url&&a.image_url.indexOf("https://")===0){
+        var i=document.createElement("img");i.src=a.image_url;i.alt=a.title;c.appendChild(i);
+      }
+      var b=document.createElement("div");b.className="card-content";
+      var t=document.createElement("div");t.className="tag";t.textContent=cats[a.category]||a.category;
+      var h=document.createElement("h3");h.textContent=a.title;
+      var p=document.createElement("p");p.textContent=a.excerpt||"";
+      b.appendChild(t);b.appendChild(h);b.appendChild(p);c.appendChild(b);
+      grid.prepend(c);
+    });
+  })
+  .catch(function(){});
+})();
 </script>
 </body>
 </html>
