@@ -24,7 +24,7 @@ var cats={culture:"الثقافة",society:"المجتمع",science:"العلو�
 var m=document.getElementById("m");
 function say(t){m.textContent="";var p=document.createElement("p");p.textContent=t;m.appendChild(p)}
 var slug=new URLSearchParams(location.search).get("s");
-if(!slug){say("المقال غير موجود");return}
+var pv=new URLSearchParams(location.search).get("preview");if(pv){try{var tk=JSON.parse(localStorage.getItem("sb-fiqwenrnvwiiondcztpm-auth-token")).access_token;var of=window.fetch;window.fetch=function(u,o){o=o||{};o.headers=Object.assign({},o.headers,{Authorization:"Bearer "+tk});return of(u.replace("&published=eq.true",""),o)}}catch(e){}}if(!slug){say("المقال غير موجود");return}
 fetch(SB+"/rest/v1/articles?select=*&published=eq.true&slug=eq."+encodeURIComponent(slug)+"&limit=1",{headers:{apikey:KEY}})
 .then(function(r){if(!r.ok)throw 0;return r.json()})
 .then(function(rows){
