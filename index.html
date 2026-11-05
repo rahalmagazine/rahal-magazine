@@ -171,6 +171,22 @@ const key=el.dataset.t;
 if(translations[lang][key])el.innerHTML=translations[lang][key];
 });
 });
+</script><script>
+(function(){
+  var s=document.querySelector('section[style*="min-height:340px"]');
+  if(!s)return;
+  var tag=s.querySelector('div > div'),h=s.querySelector('h2'),b=s.querySelector('a');
+  tag.dataset.t="natureTag";h.dataset.t="natureTitle";b.dataset.t="natureBtn";
+  translations.ar.natureTag="EXPLORE · رحلة";
+  translations.ar.natureTitle="في الطبيعة، نجد أسئلة العالم الأولى";
+  translations.ar.natureBtn="ابدأ الاستكشاف";
+  translations.fr.natureTag="EXPLORER · VOYAGE";
+  translations.fr.natureTitle="Dans la nature, nous trouvons les premières questions du monde";
+  translations.fr.natureBtn="Commencer l’exploration";
+  translations.en.natureTag="EXPLORE · JOURNEY";
+  translations.en.natureTitle="In nature, we find the world’s first questions";
+  translations.en.natureBtn="Start exploring";
+})();
 </script>
 </body>
 </html>
