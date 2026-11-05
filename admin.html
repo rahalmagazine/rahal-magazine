@@ -69,4 +69,4 @@ $("sv").onclick=async function(){
  if(r.error){say("تعذر الحفظ");return}
  reset();say("تم الحفظ");load()};
 sb.auth.getSession().then(function(r){if(r.data.session){show(true);load()}});
-</script></body></html>
+var _ld=load;load=async function(){await _ld();var r=await sb.from("articles").select("slug").order("created_at",{ascending:false});if(r.error)return;var its=document.querySelectorAll("#ls .it");r.data.forEach(function(a,i){if(!its[i])return;var b=document.createElement("button");b.className="s";b.textContent="معاينة";b.onclick=function(){window.open("article.html?s="+encodeURIComponent(a.slug)+"&preview=1","_blank")};its[i].appendChild(b)})};</script></body></html>
