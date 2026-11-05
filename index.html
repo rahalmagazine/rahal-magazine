@@ -190,6 +190,34 @@ if(translations[lang][key])el.innerHTML=translations[lang][key];
 </script><style>
 .logo{display:flex;flex-direction:column;align-items:stretch;text-align:center;line-height:1;font-family:Georgia,'Times New Roman',serif;font-size:34px;font-weight:700;letter-spacing:9px}
 .logo span{display:block;font-family:'Cairo',Arial,sans-serif;font-size:16px;font-weight:600;letter-spacing:4px;margin:10px 0 0;padding-top:9px;border-top:1px solid var(--gold);color:#f4ebdd}
+</style><style>
+.hero{flex-wrap:wrap;gap:30px;justify-content:space-between;overflow:hidden}
+.hero-content{flex:1 1 320px}
+.mag-stage{flex:1 1 360px;max-width:640px;margin:0 auto;direction:ltr;perspective:1500px;padding:30px 0}
+.mag-set{display:flex;align-items:flex-end;gap:5%;transform:rotateX(30deg) rotateZ(-8deg)}
+.mag-spread{flex:2;aspect-ratio:1.5;display:flex;position:relative;background:#efeee9;border-radius:3px;box-shadow:0 28px 38px rgba(0,0,0,.5)}
+.mag-spread:after{content:"";position:absolute;top:0;bottom:0;left:50%;width:6%;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(0,0,0,.2),transparent)}
+.mag-pg{flex:1;padding:9%;position:relative}
+.mag-pg h4{margin:0 0 10px;text-align:center;font:700 clamp(9px,1.6vw,14px) Georgia,serif;color:#222}
+.mag-pg h4 small{display:block;font-weight:400;font-size:.75em;color:#777}
+.mag-lines{height:70%;background:repeating-linear-gradient(#333 0 1.5px,transparent 1.5px 6px);opacity:.5}
+.mag-photo{position:absolute;inset:7% 7% 9% 7%;background:#142c2a url('https://images.unsplash.com/photo-1511497584788-876760111969?w=700') center/cover}
+.mag-cover{flex:1;aspect-ratio:.75;position:relative;overflow:hidden;background:#f3eee8;container-type:inline-size;border-radius:2px;box-shadow:0 28px 38px rgba(0,0,0,.5)}
+.mag-cover .ph{position:absolute;inset:auto 0 0 0;height:66%;background:linear-gradient(#f3eee8,rgba(243,238,232,0) 40%),#142c2a url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=700') center/cover}
+.mag-cover b{position:absolute;top:8%;left:9%;font:800 22px Georgia,serif;font:800 17cqw Georgia,serif;letter-spacing:.05em;color:#142c2a}
+.mag-cover i{position:absolute;top:33%;left:9%;font-style:normal;font:600 8px 'Cairo',Arial;font:600 4.6cqw 'Cairo',Arial;letter-spacing:.18em;color:#8c754a}
+.mag-cover u{position:absolute;top:30%;left:9%;width:18%;height:2px;background:#d8b879}
 </style>
+<script>
+(function(){
+  var h=document.querySelector('.hero');if(!h)return;
+  var d=document.createElement('div');d.className='mag-stage';
+  d.innerHTML='<div class="mag-set">'+
+   '<div class="mag-spread"><div class="mag-pg"><h4>Journey<small>Atlas · Culture</small></h4><div class="mag-lines"></div></div><div class="mag-pg"><div class="mag-photo"></div></div></div>'+
+   '<div class="mag-cover"><b>RAHAL</b><u></u><i>رحال · ISSUE 01 · 2026</i><div class="ph"></div></div>'+
+   '</div>';
+  h.appendChild(d);
+})();
+</script>
 </body>
 </html>
