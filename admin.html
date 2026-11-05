@@ -5,6 +5,7 @@ body{margin:0;background:#f4ebdd;color:#252827;font-family:Arial,sans-serif;padd
 h1{color:#142c2a;font-size:22px}
 input,select,textarea,button{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border:1px solid #c9bdab;border-radius:6px;font:inherit;background:#fff}
 textarea{min-height:160px}
+#so{min-height:120px}
 button{background:#142c2a;color:#d8b879;border:0;font-weight:700;cursor:pointer}
 button.s{background:#fff;color:#142c2a;border:1px solid #142c2a;width:auto;display:inline-block;padding:8px 12px;margin:4px 0 0 6px}
 label{display:flex;gap:8px;align-items:center}
@@ -15,43 +16,57 @@ label input{width:auto}
 <h1>لوحة رحال</h1><div id="msg"></div>
 <div id="login"><input id="em" type="email" placeholder="البريد" autocomplete="username"><input id="pw" type="password" placeholder="كلمة المرور" autocomplete="current-password"><button id="in">دخول</button></div>
 <div id="app" hidden>
+<h1 id="mode">مقال جديد</h1>
 <input id="ti" placeholder="العنوان">
 <select id="ca"><option value="culture">الثقافة</option><option value="society">المجتمع</option><option value="science">العلوم</option><option value="history">التاريخ</option><option value="explore">الاستكشاف</option></select>
 <input id="ex" placeholder="ملخص قصير">
 <textarea id="bo" placeholder="نص المقال"></textarea>
 <input id="im" type="url" dir="ltr" placeholder="رابط الصورة https://...">
-<label><input id="pu" type="checkbox" checked>نشر الآن</label>
-<button id="sv">حفظ المقال</button><button id="out" class="s">خروج</button>
+<input id="st" placeholder="عنوان SEO" maxlength="70">
+<input id="sd" placeholder="وصف SEO" maxlength="170">
+<textarea id="so" placeholder="المصادر: كل مصدر في سطر، ورابطه https:// في آخر السطر"></textarea>
+<label><input id="pu" type="checkbox">نشر الآن</label>
+<button id="sv">حفظ المقال</button>
+<button id="cn" class="s" hidden>إلغاء التعديل</button>
+<button id="out" class="s">خروج</button>
 <h1>مقالاتك</h1><div id="ls"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 var sb=supabase.createClient("https://fiqwenrnvwiiondcztpm.supabase.co","sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx");
 var $=function(i){return document.getElementById(i)};
+var editId=null;
 function say(t){$("msg").textContent=t}
 function show(on){$("login").hidden=on;$("app").hidden=!on}
+function reset(){editId=null;["ti","ex","bo","im","st","sd","so"].forEach(function(i){$(i).value=""});$("ca").value="culture";$("pu").checked=false;$("mode").textContent="مقال جديد";$("cn").hidden=true;$("sv").textContent="حفظ المقال"}
 async function load(){
- var r=await sb.from("articles").select("id,title,published").order("created_at",{ascending:false});
+ var r=await sb.from("articles").select("*").order("created_at",{ascending:false});
  var l=$("ls");l.textContent="";
  if(r.error){say("تعذر تحميل المقالات");return}
  r.data.forEach(function(a){
   var d=document.createElement("div");d.className="it";
   var t=document.createElement("div");t.textContent=a.title+(a.published?" ✅":" (مسودة)");
+  var b0=document.createElement("button");b0.className="s";b0.textContent="تعديل";
+  b0.onclick=function(){editId=a.id;$("ti").value=a.title||"";$("ca").value=a.category||"culture";$("ex").value=a.excerpt||"";$("bo").value=a.body||"";$("im").value=a.image_url||"";$("st").value=a.seo_title||"";$("sd").value=a.seo_description||"";$("so").value=a.sources||"";$("pu").checked=!!a.published;$("mode").textContent="تعديل مقال";$("cn").hidden=false;$("sv").textContent="حفظ التعديل";window.scrollTo(0,0)};
   var b1=document.createElement("button");b1.className="s";b1.textContent=a.published?"إخفاء":"نشر";
   b1.onclick=async function(){await sb.from("articles").update({published:!a.published}).eq("id",a.id);load()};
   var b2=document.createElement("button");b2.className="s";b2.textContent="حذف";
   b2.onclick=async function(){if(confirm("حذف نهائي؟")){await sb.from("articles").delete().eq("id",a.id);load()}};
-  d.append(t,b1,b2);l.appendChild(d)});
+  d.append(t,b0,b1,b2);l.appendChild(d)});
 }
 $("in").onclick=async function(){
  var r=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
  if(r.error){say("بيانات الدخول غير صحيحة");return}
  say("");$("pw").value="";show(true);load()};
 $("out").onclick=async function(){await sb.auth.signOut();show(false)};
+$("cn").onclick=function(){reset();say("")};
 $("sv").onclick=async function(){
  var t=$("ti").value.trim();if(!t){say("اكتب العنوان");return}
  var im=$("im").value.trim();if(im&&im.indexOf("https://")!==0){say("رابط الصورة يجب أن يبدأ بـ https://");return}
- var r=await sb.from("articles").insert({slug:"a-"+Date.now().toString(36),category:$("ca").value,lang:"ar",title:t,excerpt:$("ex").value.trim(),body:$("bo").value,image_url:im||null,published:$("pu").checked});
+ var row={category:$("ca").value,title:t,excerpt:$("ex").value.trim(),body:$("bo").value,image_url:im||null,seo_title:$("st").value.trim()||null,seo_description:$("sd").value.trim()||null,sources:$("so").value.trim()||null,published:$("pu").checked};
+ var r;
+ if(editId){r=await sb.from("articles").update(row).eq("id",editId)}
+ else{row.slug="a-"+Date.now().toString(36);row.lang="ar";r=await sb.from("articles").insert(row)}
  if(r.error){say("تعذر الحفظ");return}
- say("تم الحفظ");["ti","ex","bo","im"].forEach(function(i){$(i).value=""});load()};
+ reset();say("تم الحفظ");load()};
 sb.auth.getSession().then(function(r){if(r.data.session){show(true);load()}});
 </script></body></html>
