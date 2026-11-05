@@ -238,7 +238,7 @@ if(translations[lang][key])el.innerHTML=translations[lang][key];
       var h=document.createElement("h3");h.textContent=a.title;
       var p=document.createElement("p");p.textContent=a.excerpt||"";
       b.appendChild(t);b.appendChild(h);b.appendChild(p);c.appendChild(b);
-      grid.prepend(c);
+      c.style.cursor="pointer";c.onclick=function(){location.href="article.html?s="+encodeURIComponent(a.slug)};grid.prepend(c);
     });
   })
   .catch(function(){});
