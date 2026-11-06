@@ -11,9 +11,10 @@
 body{margin:0;background:#f4ebdd;color:#252827;font-family:'Cairo',Arial,sans-serif;line-height:2}
 header{background:#142c2a;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 header img{height:60px;width:auto;display:block}
-header nav{display:flex;gap:18px;flex-wrap:wrap}
+header nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
 header nav a{color:#fff;text-decoration:none;font-size:15px}
 header nav a:hover{color:#d8b879}
+select{padding:8px 12px;border-radius:6px;border:1px solid #d8b879;background:#142c2a;color:#d8b879;font-family:inherit}
 main{max-width:720px;margin:0 auto;padding:24px 18px 60px}
 .tag{color:#92713b;font-size:14px;font-weight:600}
 h1{color:#142c2a;font-size:clamp(26px,6vw,38px);line-height:1.5;margin:6px 0 16px}
@@ -29,14 +30,19 @@ p{font-size:18px;margin:0 0 14px}
 <body>
 <header>
 <a href="index.html"><img src="rahal-logo-transparent.png" alt="RAHAL رحال"></a>
-<nav>
-<a href="index.html#home">الرئيسية</a>
-<a href="index.html#culture">الثقافة</a>
-<a href="index.html#society">المجتمع</a>
-<a href="index.html#science">العلوم</a>
-<a href="index.html#history">التاريخ</a>
-<a href="index.html#explore">الاستكشاف</a>
-<a href="about.html">من نحن</a>
+<nav id="nav">
+<a href="index.html#home" data-k="home"></a>
+<a href="index.html#culture" data-k="culture"></a>
+<a href="index.html#society" data-k="society"></a>
+<a href="index.html#science" data-k="science"></a>
+<a href="index.html#history" data-k="history"></a>
+<a href="index.html#explore" data-k="explore"></a>
+<a href="about.html" data-k="about"></a>
+<select id="lang" aria-label="Language">
+<option value="ar">العربية</option>
+<option value="fr">Français</option>
+<option value="en">English</option>
+</select>
 </nav>
 </header>
 <main id="m"><p>جاري التحميل...</p></main>
@@ -44,27 +50,53 @@ p{font-size:18px;margin:0 0 14px}
 (function(){
 var SB="https://fiqwenrnvwiiondcztpm.supabase.co";
 var KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
-var cats={culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف"};
-var m=document.getElementById("m");
 var params=new URLSearchParams(location.search);
 var slug=params.get("s");
 var pv=params.get("preview");
-function say(t){m.textContent="";var p=document.createElement("p");p.textContent=t;m.appendChild(p)}
-function fail(){say("تعذر تحميل المقال")}
-if(!slug){say("المقال غير موجود");return}
+var lang=params.get("lang")||"ar";
+var T={
+ar:{home:"الرئيسية",culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف",about:"من نحن",sources:"المراجع والمصادر",notfound:"المقال غير موجود",error:"تعذر تحميل المقال"},
+fr:{home:"Accueil",culture:"Culture",society:"Société",science:"Sciences",history:"Histoire",explore:"Exploration",about:"À propos",sources:"Sources et références",notfound:"Article introuvable",error:"Impossible de charger l'article"},
+en:{home:"Home",culture:"Culture",society:"Society",science:"Science",history:"History",explore:"Exploration",about:"About",sources:"Sources and references",notfound:"Article not found",error:"Could not load the article"}
+};
+var L=T[lang]?lang:"ar";
+var t=T[L];
+var dirs={ar:"rtl",fr:"ltr",en:"ltr"};
+document.documentElement.lang=L;
+document.documentElement.dir=dirs[L];
+var nav=document.getElementById("nav");
+nav.querySelectorAll("a[data-k]").forEach(function(a){a.textContent=t[a.getAttribute("data-k")]});
+var sel=document.getElementById("lang");
+sel.value=L;
+sel.addEventListener("change",function(){
+var p=new URLSearchParams(location.search);
+p.set("lang",sel.value);
+location.search=p.toString();
+});
+var m=document.getElementById("m");
+function say(x){m.textContent="";var p=document.createElement("p");p.textContent=x;m.appendChild(p)}
+if(!slug){say(t.notfound);return}
+var cats={culture:t.culture,society:t.society,science:t.science,history:t.history,explore:t.explore};
 var hdr={apikey:KEY};
 var q="";
 if(pv){try{var tk=JSON.parse(localStorage.getItem("sb-fiqwenrnvwiiondcztpm-auth-token")).access_token;hdr.Authorization="Bearer "+tk}catch(e){}}
 else{q="&published=eq.true"}
-fetch(SB+"/rest/v1/articles?select=*&slug=eq."+encodeURIComponent(slug)+q+"&limit=1",{headers:hdr})
+function load(language){
+return fetch(SB+"/rest/v1/articles?select=*&slug=eq."+encodeURIComponent(slug)+"&lang=eq."+language+q+"&limit=1",{headers:hdr})
 .then(function(r){if(!r.ok)throw 0;return r.json()})
-.then(function(rows){
-var a=rows[0];
-if(!a){say("المقال غير موجود");return}
+.then(function(rows){return rows[0]});
+}
+load(L).then(function(a){
+if(!a&&L!=="ar"){return load("ar")}
+return a;
+}).then(function(a){
+if(!a){say(t.notfound);return}
+var adir=(!a.lang||a.lang==="ar")?"rtl":"ltr";
+m.setAttribute("dir",adir);
 document.title=a.seo_title||a.title;
 document.getElementById("md").setAttribute("content",a.seo_description||a.excerpt||"");
 m.textContent="";
-var t=document.createElement("div");t.className="tag";t.textContent=cats[a.category]||a.category;m.appendChild(t);
+var tg=document.createElement("div");tg.className="tag";tg.textContent=cats[a.category]||a.category;m.appendChild(tg);
 var h=document.createElement("h1");h.textContent=a.title;m.appendChild(h);
 if(a.image_url&&a.image_url.indexOf("https://")===0){var i=document.createElement("img");i.src=a.image_url;i.alt=a.title;m.appendChild(i)}
 (a.body||"").split(/\n+/).forEach(function(l){
@@ -74,7 +106,7 @@ var e=document.createElement(isH?"h3":"p");e.textContent=l;m.appendChild(e);
 });
 if(a.sources&&a.sources.trim()){
 var s=document.createElement("div");s.className="src";
-var sh=document.createElement("h3");sh.textContent="المراجع والمصادر";s.appendChild(sh);
+var sh=document.createElement("h3");sh.textContent=t.sources;s.appendChild(sh);
 a.sources.split(/\n+/).forEach(function(l){
 l=l.trim();if(!l)return;
 var p=document.createElement("p");
@@ -86,8 +118,8 @@ s.appendChild(p);
 m.appendChild(s);
 }
 })
-.catch(fail);
-new MutationObserver(function(){document.querySelectorAll("#m > p, #m > h3").forEach(function(p){p.dir="auto"})}).observe(m,{childList:true});
+.catch(function(){say(t.error)});
+new MutationObserver(function(){m.querySelectorAll("p,h3").forEach(function(p){p.dir="auto"})}).observe(m,{childList:true});
 })();
 </script>
 </body>
