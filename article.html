@@ -9,8 +9,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 body{margin:0;background:#f4ebdd;color:#252827;font-family:'Cairo',Arial,sans-serif;line-height:2}
-header{background:#142c2a;padding:16px 20px}
-header a{color:#d8b879;text-decoration:none;font-weight:800;letter-spacing:3px}
+header{background:#142c2a;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header img{height:60px;width:auto;display:block}
+header nav{display:flex;gap:18px;flex-wrap:wrap}
+header nav a{color:#fff;text-decoration:none;font-size:15px}
+header nav a:hover{color:#d8b879}
 main{max-width:720px;margin:0 auto;padding:24px 18px 60px}
 .tag{color:#92713b;font-size:14px;font-weight:600}
 h1{color:#142c2a;font-size:clamp(26px,6vw,38px);line-height:1.5;margin:6px 0 16px}
@@ -24,7 +27,18 @@ p{font-size:18px;margin:0 0 14px}
 </style>
 </head>
 <body>
-<header><a href="index.html">RAHAL | رحال</a></header>
+<header>
+<a href="index.html"><img src="rahal-logo-transparent.png" alt="RAHAL رحال"></a>
+<nav>
+<a href="index.html#home">الرئيسية</a>
+<a href="index.html#culture">الثقافة</a>
+<a href="index.html#society">المجتمع</a>
+<a href="index.html#science">العلوم</a>
+<a href="index.html#history">التاريخ</a>
+<a href="index.html#explore">الاستكشاف</a>
+<a href="about.html">من نحن</a>
+</nav>
+</header>
 <main id="m"><p>جاري التحميل...</p></main>
 <script>
 (function(){
