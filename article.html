@@ -1,4 +1,11 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>رحال</title><meta name="description" content="" id="md">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAHAL | رحال</title>
+<meta id="md" name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 body{margin:0;background:#f4ebdd;color:#252827;font-family:'Cairo',Arial,sans-serif;line-height:2}
@@ -8,62 +15,66 @@ main{max-width:720px;margin:0 auto;padding:24px 18px 60px}
 .tag{color:#92713b;font-size:14px;font-weight:600}
 h1{color:#142c2a;font-size:clamp(26px,6vw,38px);line-height:1.5;margin:6px 0 16px}
 img{max-width:100%;border-radius:6px;margin:8px 0 20px}
-h3{color:#142c2a;margin:28px 0 4px}
-p{margin:0 0 14px;font-size:18px}
+h3{color:#142c2a;font-size:20px;margin:28px 0 4px}
+p{font-size:18px;margin:0 0 14px}
 .src{border-top:1px solid #c9bdab;margin-top:36px;padding-top:12px}
 .src h3{font-size:18px}
 .src p{font-size:15px;margin:0 0 8px}
 .src a{color:#92713b;word-break:break-all}
-</style></head><body>
-<header>
-<div class="logo"><img src="rahal-logo-transparent.png" alt="RAHAL رحال" style="height:110px; width:auto;"></div>
-<nav>
-<a href="#home" data-t="home">الرئيسية</a>
-<a href="#culture" data-t="culture">الثقافة</a>
-<a href="#society" data-t="society">المجتمع</a>
-<a href="#science" data-t="science">العلوم</a>
-<a href="#history" data-t="history">التاريخ</a>
-<a href="#explore" data-t="explore">الاستكشاف</a>
-  <a href="about.html">من نحن</a>
-</nav>
-<select id="language" aria-label="Language">
-<option value="ar">العربية</option>
-<option value="fr">Français</option>
-<option value="en">English</option>
-</select>
-<main id="m"><p>جارٍ التحميل…</p></main>
+</style>
+</head>
+<body>
+<header><a href="index.html">RAHAL | رحال</a></header>
+<main id="m"><p>جاري التحميل...</p></main>
 <script>
 (function(){
-var SB="https://fiqwenrnvwiiondcztpm.supabase.co",KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
+var SB="https://fiqwenrnvwiiondcztpm.supabase.co";
+var KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
 var cats={culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف"};
 var m=document.getElementById("m");
+var params=new URLSearchParams(location.search);
+var slug=params.get("s");
+var pv=params.get("preview");
 function say(t){m.textContent="";var p=document.createElement("p");p.textContent=t;m.appendChild(p)}
-var slug=new URLSearchParams(location.search).get("s");
-var pv=new URLSearchParams(location.search).get("preview");if(pv){try{var tk=JSON.parse(localStorage.getItem("sb-fiqwenrnvwiiondcztpm-auth-token")).access_token;var of=window.fetch;window.fetch=function(u,o){o=o||{};o.headers=Object.assign({},o.headers,{Authorization:"Bearer "+tk});return of(u.replace("&published=eq.true",""),o)}}catch(e){}}if(!slug){say("المقال غير موجود");return}
-fetch(SB+"/rest/v1/articles?select=*&published=eq.true&slug=eq."+encodeURIComponent(slug)+"&limit=1",{headers:{apikey:KEY}})
+function fail(){say("تعذر تحميل المقال")}
+if(!slug){say("المقال غير موجود");return}
+var hdr={apikey:KEY};
+var q="";
+if(pv){try{var tk=JSON.parse(localStorage.getItem("sb-fiqwenrnvwiiondcztpm-auth-token")).access_token;hdr.Authorization="Bearer "+tk}catch(e){}}
+else{q="&published=eq.true"}
+fetch(SB+"/rest/v1/articles?select=*&slug=eq."+encodeURIComponent(slug)+q+"&limit=1",{headers:hdr})
 .then(function(r){if(!r.ok)throw 0;return r.json()})
 .then(function(rows){
- var a=rows[0];if(!a){say("المقال غير موجود");return}
- document.title=a.seo_title||a.title;
- document.getElementById("md").setAttribute("content",a.seo_description||a.excerpt||"");
- m.textContent="";
- var t=document.createElement("div");t.className="tag";t.textContent=cats[a.category]||a.category;m.appendChild(t);
- var h=document.createElement("h1");h.textContent=a.title;m.appendChild(h);
- if(a.image_url&&a.image_url.indexOf("https://")===0){var i=document.createElement("img");i.src=a.image_url;i.alt=a.title;m.appendChild(i)}
- (a.body||"").split(/\n+/).forEach(function(l){
-  l=l.trim();if(!l)return;
-  var isH=l.length<50&&!/[.،؟?:!…]$/.test(l);
-  var e=document.createElement(isH?"h3":"p");e.textContent=l;m.appendChild(e)});
- if(a.sources&&a.sources.trim()){
-  var s=document.createElement("div");s.className="src";
-  var sh=document.createElement("h3");sh.textContent="المصادر والمراجع";s.appendChild(sh);
-  a.sources.split(/\n+/).forEach(function(l){
-   l=l.trim();if(!l)return;
-   var p=document.createElement("p");var u=l.match(/https:\/\/\S+/);
-   if(u){var k=document.createElement("a");k.href=u[0];k.textContent=l.replace(u[0],"").trim()||u[0];k.target="_blank";k.rel="noopener";p.appendChild(k)}else{p.textContent=l}
-   s.appendChild(p)});
-  m.appendChild(s)}
+var a=rows[0];
+if(!a){say("المقال غير موجود");return}
+document.title=a.seo_title||a.title;
+document.getElementById("md").setAttribute("content",a.seo_description||a.excerpt||"");
+m.textContent="";
+var t=document.createElement("div");t.className="tag";t.textContent=cats[a.category]||a.category;m.appendChild(t);
+var h=document.createElement("h1");h.textContent=a.title;m.appendChild(h);
+if(a.image_url&&a.image_url.indexOf("https://")===0){var i=document.createElement("img");i.src=a.image_url;i.alt=a.title;m.appendChild(i)}
+(a.body||"").split(/\n+/).forEach(function(l){
+l=l.trim();if(!l)return;
+var isH=l.length<50&&!/[.،؟:!_]$/.test(l);
+var e=document.createElement(isH?"h3":"p");e.textContent=l;m.appendChild(e);
+});
+if(a.sources&&a.sources.trim()){
+var s=document.createElement("div");s.className="src";
+var sh=document.createElement("h3");sh.textContent="المراجع والمصادر";s.appendChild(sh);
+a.sources.split(/\n+/).forEach(function(l){
+l=l.trim();if(!l)return;
+var p=document.createElement("p");
+var u=l.match(/https:\/\/\S+/);
+if(u){var k=document.createElement("a");k.href=u[0];k.textContent=l.replace(u[0],"").trim()||u[0];k.target="_blank";k.rel="noopener";p.appendChild(k)}
+else{p.textContent=l}
+s.appendChild(p);
+});
+m.appendChild(s);
+}
 })
-.catch(function(){say("تعذر تحميل المقال")});
+.catch(fail);
+new MutationObserver(function(){document.querySelectorAll("#m > p, #m > h3").forEach(function(p){p.dir="auto"})}).observe(m,{childList:true});
 })();
-new MutationObserver(function(){document.querySelectorAll("#m > p").forEach(function(p){p.dir="auto"})}).observe(document.getElementById("m"),{childList:true});</script></body></html>
+</script>
+</body>
+</html>
