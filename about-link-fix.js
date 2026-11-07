@@ -38,9 +38,9 @@
       ".rahal-soc a{order:20 !important;width:28px !important;height:28px !important}"+
       ".rahal-soc svg{width:14px !important;height:14px !important}"+
     "}"+
-    "@media (min-width:700px){html[dir=rtl] header .logo{margin-right:-72px !important}}"+
+    "@media (min-width:700px){header{padding-left:24px !important;padding-right:24px !important}header>nav{margin-left:24px !important;margin-right:24px !important}}"+
     ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
-    "@media (min-width:700px){html[dir=rtl] .rahal-tools.rahal-home{margin-left:-40px !important}}"+
+    ""+
     ".rahal-tools select{background:transparent !important;color:#fff !important;border:1px solid #fff !important}"+
     ".rahal-tools select option{color:#252827;background:#fff}"+
     ".rahal-lang{display:none;align-items:center;gap:6px}"+
