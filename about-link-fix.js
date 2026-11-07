@@ -21,7 +21,7 @@
   var css=
     "header{display:flex !important;justify-content:space-between !important;align-items:center;flex-wrap:wrap}"+
     "header>nav{flex:1 1 auto}"+
-    "@media (max-width:699px){"+"html,body{overflow-x:hidden !important;max-width:100% !important}"+"header,header>nav{box-sizing:border-box !important;max-width:100% !important;margin-left:0 !important;margin-right:0 !important}"+
+    "@media (max-width:699px){"+"html[dir=ltr] header .logo,html[dir=ltr] header>a:first-child{order:4 !important}"+"html[dir=ltr] .rahal-lang{order:1 !important}"+"html[dir=ltr] .rahal-tbtn{order:2 !important}"+"html[dir=ltr] .rahal-sw{order:3 !important}"+"html,body{overflow-x:hidden !important;max-width:100% !important}"+"header,header>nav{box-sizing:border-box !important;max-width:100% !important;margin-left:0 !important;margin-right:0 !important}"+
       "header{flex-direction:row !important;flex-wrap:wrap !important;justify-content:space-between !important;align-items:center !important;gap:12px 6px !important;padding:12px 10px !important}"+
       "header img{height:64px !important;width:auto !important}"+
       "header .logo,header>a:first-child{order:1 !important;margin:0 0 0 auto !important}"+
@@ -38,9 +38,9 @@
       ".rahal-soc a{order:20 !important;width:28px !important;height:28px !important}"+
       ".rahal-soc svg{width:14px !important;height:14px !important}"+
     "}"+
-    "@media (min-width:700px){header .logo{margin-right:-72px !important}}"+
+    "@media (min-width:700px){html[dir=rtl] header .logo{margin-right:-72px !important}}"+
     ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
-    "@media (min-width:700px){.rahal-tools.rahal-home{margin-left:-40px !important}}"+
+    "@media (min-width:700px){html[dir=rtl] .rahal-tools.rahal-home{margin-left:-40px !important}}"+
     ".rahal-tools select{background:transparent !important;color:#fff !important;border:1px solid #fff !important}"+
     ".rahal-tools select option{color:#252827;background:#fff}"+
     ".rahal-lang{display:none;align-items:center;gap:6px}"+
