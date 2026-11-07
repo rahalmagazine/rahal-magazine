@@ -19,9 +19,9 @@
   var MOON='<svg viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>';
 
   var css=
-    "header{display:flex !important;justify-content:space-between !important;align-items:center;flex-wrap:wrap}"+
-    "header>nav{flex:1 1 auto}"+
-    "@media (max-width:699px){"+"html[dir=ltr] header .logo,html[dir=ltr] header>a:first-child{order:4 !important}"+"html[dir=ltr] .rahal-lang{order:1 !important}"+"html[dir=ltr] .rahal-tbtn{order:2 !important}"+"html[dir=ltr] .rahal-sw{order:3 !important}"+"html,body{overflow-x:hidden !important;max-width:100% !important}"+"header,header>nav{box-sizing:border-box !important;max-width:100% !important;margin-left:0 !important;margin-right:0 !important}"+
+    "header{display:flex !important;justify-content:space-between !important;align-items:center;flex-wrap:nowrap}"+
+    "header>nav{flex:1 1 auto;min-width:0}"+
+    "@media (max-width:699px){"+".rahal-sw:has(.rahal-sf.open){flex:0 0 100% !important;order:5 !important;justify-content:center !important}"+"html[dir=ltr] header .logo,html[dir=ltr] header>a:first-child{order:4 !important}"+"html[dir=ltr] .rahal-lang{order:1 !important}"+"html[dir=ltr] .rahal-tbtn{order:2 !important}"+"html[dir=ltr] .rahal-sw{order:3 !important}"+"html,body{overflow-x:hidden !important;max-width:100% !important}"+"header,header>nav{box-sizing:border-box !important;max-width:100% !important;margin-left:0 !important;margin-right:0 !important}"+
       "header{flex-direction:row !important;flex-wrap:wrap !important;justify-content:space-between !important;align-items:center !important;gap:12px 6px !important;padding:12px 10px !important}"+
       "header img{height:64px !important;width:auto !important}"+
       "header .logo,header>a:first-child{order:1 !important;margin:0 0 0 auto !important}"+
@@ -56,7 +56,7 @@
     ".rahal-soc a:hover{background:#d8b879}"+
     ".rahal-soc svg{width:18px;height:18px;stroke:#d8b879;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
     ".rahal-soc a:hover svg{stroke:#142c2a}"+
-    ".rahal-tbtn{background:transparent;border:0;padding:0;margin-right:24px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:.95}"+
+    ".rahal-tbtn{background:transparent;border:0;padding:0;margin-inline-start:24px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:.95}"+
     ".rahal-tbtn:hover{opacity:1}"+
     ".rahal-tbtn svg{width:22px;height:22px;fill:#d8b879;stroke:none}"+
     ".rahal-sf{display:none;align-items:center;gap:6px}"+
