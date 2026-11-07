@@ -23,7 +23,7 @@
     "header>nav{flex:1 1 auto}"+
     "@media (min-width:700px){header .logo{margin-right:-72px !important}}"+
     ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
-    "@media (min-width:700px){.rahal-tools{margin-left:-40px !important}}"+
+    "@media (min-width:700px){.rahal-tools.rahal-home{margin-left:-40px !important}}"+
     ".rahal-tools select{background:transparent !important;color:#fff !important;border:1px solid #fff !important}"+
     ".rahal-tools select option{color:#252827;background:#fff}"+
     ".rahal-sw{display:inline-flex;align-items:center;margin:0 26px;vertical-align:middle}"+
@@ -115,6 +115,7 @@
 
     var group=document.createElement("span");
     group.className="rahal-tools";
+    if(document.querySelector(".hero")) group.classList.add("rahal-home");
     group.appendChild(soc);
 
     if(sel){
