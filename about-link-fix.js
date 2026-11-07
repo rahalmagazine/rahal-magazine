@@ -15,15 +15,15 @@
     {name:"X",url:"https://x.com/",svg:'<svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>'}
   ];
 
-  var MOON='<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
-  var SUN='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  // هلال للوضع الليلي
+  var MOON='<svg viewBox="0 0 24 24"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>';
 
   var css=
     "header{display:flex !important;justify-content:space-between !important;align-items:center;flex-wrap:wrap}"+
     "header>nav{flex:1 1 auto}"+
     "@media (min-width:700px){header .logo{margin-right:-72px !important}}"+
     ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
-    "@media (min-width:700px){.rahal-tools{margin-left:-20px !important}}"+
+    "@media (min-width:700px){.rahal-tools{margin-left:-40px !important}}"+
     ".rahal-tools select{background:transparent !important;color:#fff !important;border:1px solid #fff !important}"+
     ".rahal-tools select option{color:#252827;background:#fff}"+
     ".rahal-sw{display:inline-flex;align-items:center;margin:0 26px;vertical-align:middle}"+
@@ -31,10 +31,13 @@
     ".rahal-sb:hover{opacity:1}"+
     ".rahal-sb svg{width:20px;height:20px;stroke:#f4ebdd;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}"+
     ".rahal-soc{display:inline-flex;align-items:center;gap:6px}"+
-    ".rahal-soc a,.rahal-tbtn{width:36px;height:36px;border:1px solid #d8b879;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:none;cursor:pointer;padding:0}"+
-    ".rahal-soc a:hover,.rahal-tbtn:hover{background:#d8b879}"+
-    ".rahal-soc svg,.rahal-tbtn svg{width:18px;height:18px;stroke:#d8b879;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
-    ".rahal-soc a:hover svg,.rahal-tbtn:hover svg{stroke:#142c2a}"+
+    ".rahal-soc a{width:36px;height:36px;border:1px solid #d8b879;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}"+
+    ".rahal-soc a:hover{background:#d8b879}"+
+    ".rahal-soc svg{width:18px;height:18px;stroke:#d8b879;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
+    ".rahal-soc a:hover svg{stroke:#142c2a}"+
+    ".rahal-tbtn{background:transparent;border:0;padding:0;margin-right:24px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:.95}"+
+    ".rahal-tbtn:hover{opacity:1}"+
+    ".rahal-tbtn svg{width:22px;height:22px;fill:#d8b879;stroke:none}"+
     ".rahal-sf{display:none;align-items:center;gap:6px}"+
     ".rahal-sf.open{display:inline-flex}"+
     ".rahal-sf input{width:170px;max-width:50vw;padding:7px 10px;border:1px solid #d8b879;border-radius:6px;background:#fff;color:#252827;font-family:inherit;font-size:14px}"+
@@ -73,9 +76,10 @@
   function paintTheme(){
     var b=document.querySelector(".rahal-tbtn");
     if(!b) return;
-    b.innerHTML = isDark() ? SUN : MOON;
-    b.setAttribute("title", isDark() ? "الوضع النهاري" : "الوضع الليلي");
-    b.setAttribute("aria-label", isDark() ? "الوضع النهاري" : "الوضع الليلي");
+    b.innerHTML=MOON;
+    var t=isDark() ? "الوضع النهاري" : "الوضع الليلي";
+    b.setAttribute("title",t);
+    b.setAttribute("aria-label",t);
   }
 
   function build(){
