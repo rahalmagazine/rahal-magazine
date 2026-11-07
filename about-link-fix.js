@@ -10,6 +10,14 @@
   window.gtag("js",new Date());
   window.gtag("config",GA_ID);
 
+  // وصف الصفحة الرئيسية لـ Google: مجلة مغربية
+  if(document.querySelector(".hero")){
+    var desc="رحال مجلة رقمية مغربية مستقلة، مساحة للمعرفة والفضول، نروي فيها قصص الإنسان والمكان والعلم والتاريخ، ونستكشف المدن المغربية وذاكرتها.";
+    var md=document.querySelector('meta[name="description"]');
+    if(!md){ md=document.createElement("meta"); md.name="description"; document.head.appendChild(md); }
+    md.setAttribute("content",desc);
+  }
+
   var names={
     ar:{about:"من نحن",ph:"اكتب كلمة للبحث...",go:"بحث",aria:"بحث"},
     fr:{about:"À propos",ph:"Rechercher...",go:"Chercher",aria:"Rechercher"},
