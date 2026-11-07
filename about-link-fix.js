@@ -18,7 +18,7 @@
   var css=
     "header{display:flex !important;justify-content:space-between !important;align-items:center;flex-wrap:wrap}"+
     "header>nav{flex:1 1 auto}"+
-    "@media (min-width:700px){header .logo,header>a:first-child{margin-right:-40px !important}}"+
+    "@media (min-width:700px){header .logo{margin-right:-60px !important}}"+
     ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
     ".rahal-tools select{background:transparent !important;color:#fff !important;border:1px solid #fff !important}"+
     ".rahal-tools select option{color:#252827;background:#fff}"+
