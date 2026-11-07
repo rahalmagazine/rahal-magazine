@@ -17,6 +17,8 @@
 
   var css=
     ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
+    ".rahal-tools select{background:transparent !important;color:#fff !important;border:1px solid #fff !important}"+
+    ".rahal-tools select option{color:#252827;background:#fff}"+
     ".rahal-sw{display:inline-flex;align-items:center;margin:0 26px;vertical-align:middle}"+
     ".rahal-sb{background:transparent;border:0;padding:4px;cursor:pointer;opacity:.7;display:inline-flex;align-items:center;justify-content:center}"+
     ".rahal-sb:hover{opacity:1}"+
