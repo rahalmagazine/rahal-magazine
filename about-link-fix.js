@@ -21,7 +21,7 @@
   var css=
     "header{display:flex !important;justify-content:space-between !important;align-items:center;flex-wrap:wrap}"+
     "header>nav{flex:1 1 auto}"+
-    "@media (max-width:699px){"+
+    "@media (max-width:699px){"+"html,body{overflow-x:hidden !important;max-width:100% !important}"+"header,header>nav{box-sizing:border-box !important;max-width:100% !important;margin-left:0 !important;margin-right:0 !important}"+
       "header{flex-direction:row !important;flex-wrap:wrap !important;justify-content:space-between !important;align-items:center !important;gap:12px 6px !important;padding:12px 10px !important}"+
       "header img{height:64px !important;width:auto !important}"+
       "header .logo,header>a:first-child{order:1 !important;margin:0 0 0 auto !important}"+
