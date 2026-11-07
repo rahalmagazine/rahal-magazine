@@ -215,6 +215,97 @@
 
   function run(){ build(); labels(); paintTheme(); paintLang(); }
 
+  var SHARE_T={
+    ar:{label:"شارك المقال",copy:"انسخ الرابط",copied:"تم نسخ الرابط"},
+    fr:{label:"Partager l'article",copy:"Copier le lien",copied:"Lien copié"},
+    en:{label:"Share the article",copy:"Copy link",copied:"Link copied"}
+  };
+  var WA_SVG='<svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 10c0 2.5 2.5 5 5 5l1-1.2-1.8-.8-.6.6c-.8-.4-1.6-1.2-2-2l.6-.6-.8-1.8z"/></svg>';
+  var FB_SVG='<svg viewBox="0 0 24 24"><path d="M14 22v-8h2.6l.4-3H14V9.2c0-.9.3-1.5 1.5-1.5H17.5V5.1c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4V11H9v3h2.3v8"/></svg>';
+  var X_SVG='<svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>';
+  var LINK_SVG='<svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>';
+
+  var shareCss=
+    ".rahal-share{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:14px 0 24px;padding:12px 0;border-top:1px solid rgba(146,113,59,.35);border-bottom:1px solid rgba(146,113,59,.35)}"+
+    ".rahal-share-lbl{font-size:14px;color:#92713b;font-weight:600;margin-inline-end:6px}"+
+    ".rahal-share a,.rahal-share button{width:36px;height:36px;border:1px solid #92713b;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:transparent;cursor:pointer;padding:0;text-decoration:none}"+
+    ".rahal-share a:hover,.rahal-share button:hover,.rahal-share button.ok{background:#92713b}"+
+    ".rahal-share svg{width:17px;height:17px;stroke:#92713b;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
+    ".rahal-share a:hover svg,.rahal-share button:hover svg,.rahal-share button.ok svg{stroke:#fff}"+
+    "html.rahal-dark .rahal-share-lbl{color:#d8b879}"+
+    "html.rahal-dark .rahal-share a,html.rahal-dark .rahal-share button{border-color:#d8b879}"+
+    "html.rahal-dark .rahal-share svg{stroke:#d8b879}"+
+    "html.rahal-dark .rahal-share a:hover,html.rahal-dark .rahal-share button:hover,html.rahal-dark .rahal-share button.ok{background:#d8b879}"+
+    "html.rahal-dark .rahal-share a:hover svg,html.rahal-dark .rahal-share button:hover svg,html.rahal-dark .rahal-share button.ok svg{stroke:#142c2a}";
+
+  function shareT(){ return SHARE_T[currentLang()] || SHARE_T.ar; }
+
+  function addShare(){
+    var m=document.getElementById("m");
+    if(!m || m.querySelector(".rahal-share")) return;
+    var h=m.querySelector("h1");
+    if(!h) return;
+    var t=shareT();
+    var title=h.textContent.trim();
+    var url=location.href;
+
+    var box=document.createElement("div");
+    box.className="rahal-share";
+    var lbl=document.createElement("span");
+    lbl.className="rahal-share-lbl";
+    lbl.textContent=t.label;
+    box.appendChild(lbl);
+
+    function link(name,href,svg){
+      var a=document.createElement("a");
+      a.href=href;
+      a.target="_blank";
+      a.rel="noopener";
+      a.title=name;
+      a.setAttribute("aria-label",name);
+      a.innerHTML=svg;
+      box.appendChild(a);
+    }
+    link("WhatsApp","https://wa.me/?text="+encodeURIComponent(title+" "+url),WA_SVG);
+    link("Facebook","https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url),FB_SVG);
+    link("X","https://x.com/intent/post?text="+encodeURIComponent(title)+"&url="+encodeURIComponent(url),X_SVG);
+
+    var b=document.createElement("button");
+    b.type="button";
+    b.title=t.copy;
+    b.setAttribute("aria-label",t.copy);
+    b.innerHTML=LINK_SVG;
+    b.addEventListener("click",function(){
+      var tt=shareT();
+      function done(){
+        b.classList.add("ok");
+        b.title=tt.copied;
+        setTimeout(function(){ b.classList.remove("ok"); b.title=tt.copy; },1500);
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(done,function(){ window.prompt(tt.copy,url); });
+      } else {
+        window.prompt(tt.copy,url);
+      }
+    });
+    box.appendChild(b);
+
+    h.parentNode.insertBefore(box,h.nextSibling);
+  }
+
+  function shareInit(){
+    var m=document.getElementById("m");
+    if(!m) return;
+    if(!document.getElementById("rahal-share-css")){
+      var st2=document.createElement("style");
+      st2.id="rahal-share-css";
+      st2.textContent=shareCss;
+      document.head.appendChild(st2);
+    }
+    addShare();
+    new MutationObserver(function(){ addShare(); }).observe(m,{childList:true});
+  }
+
   loadTheme();
   var sel=langSel();
   var LANG_KEY="rahal-lang";
@@ -236,4 +327,5 @@
   setTimeout(run,300);
   setTimeout(restoreLang,1000);
   setTimeout(run,1000);
+  shareInit();
 })();
