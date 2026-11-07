@@ -217,8 +217,23 @@
 
   loadTheme();
   var sel=langSel();
-  if(sel){ sel.addEventListener("change",function(){ setTimeout(run,50); }); }
+  var LANG_KEY="rahal-lang";
+  function savedLang(){ try{ return localStorage.getItem(LANG_KEY); }catch(e){ return null; } }
+  function saveLang(v){ try{ localStorage.setItem(LANG_KEY,v); }catch(e){} }
+  function restoreLang(){
+    var s2=langSel();
+    if(!s2) return;
+    var want=savedLang();
+    if(!want || s2.value===want) return;
+    if(!s2.querySelector('option[value="'+want+'"]')) return;
+    s2.value=want;
+    s2.dispatchEvent(new Event("change"));
+  }
+  if(sel){ sel.addEventListener("change",function(){ saveLang(sel.value); setTimeout(run,50); }); }
+  restoreLang();
   run();
+  setTimeout(restoreLang,300);
   setTimeout(run,300);
+  setTimeout(restoreLang,1000);
   setTimeout(run,1000);
 })();
