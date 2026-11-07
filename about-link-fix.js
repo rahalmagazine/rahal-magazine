@@ -75,10 +75,17 @@
     group.appendChild(soc);
 
     if(sel){
-      var parent=sel.parentNode;
-      parent.insertBefore(group, sel);
-      group.appendChild(sel);
-      parent.insertBefore(wrap, group);
+      var host=sel.parentNode;
+      if(host.tagName==="NAV" && host.parentNode && host.parentNode.tagName==="HEADER"){
+        var hdr=host.parentNode;
+        hdr.insertBefore(wrap, host.nextSibling);
+        hdr.insertBefore(group, wrap.nextSibling);
+        group.appendChild(sel);
+      } else {
+        host.insertBefore(group, sel);
+        group.appendChild(sel);
+        host.insertBefore(wrap, group);
+      }
       if(search && search.parentNode) search.parentNode.removeChild(search);
     } else if(search){
       search.parentNode.replaceChild(wrap, search);
