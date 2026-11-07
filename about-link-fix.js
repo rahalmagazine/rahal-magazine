@@ -1,4 +1,15 @@
 (function(){
+  // Google Analytics: رقم القياس ديال المجلة
+  var GA_ID="G-P8ZZ24G3DP";
+  var gs=document.createElement("script");
+  gs.async=true;
+  gs.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;
+  document.head.appendChild(gs);
+  window.dataLayer=window.dataLayer||[];
+  window.gtag=window.gtag||function(){ window.dataLayer.push(arguments); };
+  window.gtag("js",new Date());
+  window.gtag("config",GA_ID);
+
   var names={
     ar:{about:"من نحن",ph:"اكتب كلمة للبحث...",go:"بحث",aria:"بحث"},
     fr:{about:"À propos",ph:"Rechercher...",go:"Chercher",aria:"Rechercher"},
