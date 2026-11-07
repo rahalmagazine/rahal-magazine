@@ -275,6 +275,8 @@
     ".rahal-share a:hover,.rahal-share button:hover,.rahal-share button.ok{background:#92713b}"+
     ".rahal-share svg{width:17px;height:17px;stroke:#92713b;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
     ".rahal-share a:hover svg,.rahal-share button:hover svg,.rahal-share button.ok svg{stroke:#fff}"+
+    ".rahal-read{font-size:14px;color:#92713b;margin:4px 0 0;font-weight:600}"+
+    "html.rahal-dark .rahal-read{color:#d8b879}"+
     "html.rahal-dark .rahal-share-lbl{color:#d8b879}"+
     "html.rahal-dark .rahal-share a,html.rahal-dark .rahal-share button{border-color:#d8b879}"+
     "html.rahal-dark .rahal-share svg{stroke:#d8b879}"+
@@ -336,7 +338,18 @@
     });
     box.appendChild(b);
 
-    h.parentNode.insertBefore(box,h.nextSibling);
+    var words=0;
+    m.querySelectorAll("p,h3").forEach(function(x){
+      var w=(x.textContent||"").trim();
+      if(w) words+=w.split(/\s+/).length;
+    });
+    var mins=Math.max(1,Math.round(words/200));
+    var RT={ar:"دقائق للقراءة",fr:"min de lecture",en:"min read"};
+    var rd=document.createElement("div");
+    rd.className="rahal-read";
+    rd.textContent=mins+" "+(RT[currentLang()]||RT.ar);
+    h.parentNode.insertBefore(rd,h.nextSibling);
+    rd.parentNode.insertBefore(box,rd.nextSibling);
   }
 
   function shareInit(){
