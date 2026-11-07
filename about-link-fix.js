@@ -16,14 +16,16 @@
   ];
 
   var css=
-    ".rahal-tools{display:inline-flex;align-items:center;gap:8px;margin-left:auto}"+
-    ".rahal-sw{display:inline-flex;align-items:center;gap:6px;vertical-align:middle}"+
+    ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
+    ".rahal-sw{display:inline-flex;align-items:center;margin:0 26px;vertical-align:middle}"+
+    ".rahal-sb{background:transparent;border:0;padding:4px;cursor:pointer;opacity:.7;display:inline-flex;align-items:center;justify-content:center}"+
+    ".rahal-sb:hover{opacity:1}"+
+    ".rahal-sb svg{width:20px;height:20px;stroke:#f4ebdd;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}"+
     ".rahal-soc{display:inline-flex;align-items:center;gap:6px}"+
-    ".rahal-soc a,.rahal-sb{width:36px;height:36px;border:1px solid #d8b879;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;text-decoration:none;background:none}"+
-    ".rahal-soc a:hover,.rahal-sb:hover{background:#d8b879}"+
-    ".rahal-soc svg,.rahal-sb svg{width:18px;height:18px;stroke:#d8b879;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
-    ".rahal-soc a:hover svg,.rahal-sb:hover svg{stroke:#142c2a}"+
-    ".rahal-soc a[href*=youtube] svg path:last-child{fill:#d8b879}"+
+    ".rahal-soc a{width:36px;height:36px;border:1px solid #d8b879;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}"+
+    ".rahal-soc a:hover{background:#d8b879}"+
+    ".rahal-soc svg{width:18px;height:18px;stroke:#d8b879;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
+    ".rahal-soc a:hover svg{stroke:#142c2a}"+
     ".rahal-sf{display:none;align-items:center;gap:6px}"+
     ".rahal-sf.open{display:inline-flex}"+
     ".rahal-sf input{width:170px;max-width:50vw;padding:7px 10px;border:1px solid #d8b879;border-radius:6px;background:#fff;color:#252827;font-family:inherit;font-size:14px}"+
@@ -32,7 +34,7 @@
   st.textContent=css;
   document.head.appendChild(st);
 
-  var ICON='<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round"/></svg>';
+  var ICON='<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>';
 
   function langSel(){ return document.getElementById("language") || document.getElementById("lang"); }
   function currentLang(){ var s=langSel(); return (s && s.value) || "ar"; }
@@ -54,7 +56,7 @@
     var wrap=document.createElement("span");
     wrap.className="rahal-sw";
     wrap.innerHTML=
-      '<button type="button" class="rahal-sb">'+ICON+'</button>'+
+      '<button type="button" class="rahal-sb" aria-label="بحث">'+ICON+'</button>'+
       '<form class="rahal-sf" action="search.html" method="get">'+
         '<input name="q" type="search" autocomplete="off">'+
         '<button type="submit"></button>'+
@@ -66,17 +68,20 @@
 
     var group=document.createElement("span");
     group.className="rahal-tools";
-    group.appendChild(wrap);
     group.appendChild(soc);
 
     if(sel){
-      sel.parentNode.insertBefore(group, sel);
+      var parent=sel.parentNode;
+      parent.insertBefore(group, sel);
       group.appendChild(sel);
+      parent.insertBefore(wrap, group);
       if(search && search.parentNode) search.parentNode.removeChild(search);
     } else if(search){
-      search.parentNode.replaceChild(group, search);
+      search.parentNode.replaceChild(wrap, search);
+      wrap.parentNode.insertBefore(group, wrap.nextSibling);
     } else {
-      about.parentNode.insertBefore(group, about.nextSibling);
+      about.parentNode.insertBefore(wrap, about.nextSibling);
+      wrap.parentNode.insertBefore(group, wrap.nextSibling);
     }
 
     var btn=wrap.querySelector(".rahal-sb");
