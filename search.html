@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>بحث | RAHAL - رحال</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f4ebdd;color:#252827;font-family:'Cairo',Arial,sans-serif;line-height:1.8}
+header{background:#142c2a;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header img{height:60px;width:auto;display:block}
+header a.back{color:#d8b879;text-decoration:none;font-weight:600}
+main{max-width:720px;margin:0 auto;padding:28px 18px 60px}
+h1{color:#142c2a;font-size:28px;margin:0 0 16px}
+form{display:flex;gap:10px;margin-bottom:20px}
+input{flex:1;padding:12px;border:1px solid #c9bdab;border-radius:6px;font-family:inherit;font-size:16px;background:#fff}
+button{padding:12px 18px;background:#142c2a;color:#d8b879;border:0;border-radius:6px;cursor:pointer;font-family:inherit;font-size:16px}
+.card{display:block;background:#fff;border-radius:8px;padding:14px 16px;margin-bottom:12px;text-decoration:none;color:#252827;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card h2{margin:0 0 4px;font-size:18px;color:#142c2a}
+.card .tag{font-size:13px;color:#92713b;font-weight:600}
+.card p{margin:4px 0 0;font-size:15px}
+.status{color:#92713b;margin:10px 0}
+footer{text-align:center;font-size:14px;color:#92713b;padding:20px}
+</style>
+</head>
+<body>
+<header>
+<a href="index.html"><img src="rahal-logo-transparent.png" alt="RAHAL رحال"></a>
+<a class="back" href="index.html">الرئيسية</a>
+</header>
+<main>
+<h1>بحث</h1>
+<form id="f">
+<input id="q" type="search" placeholder="اكتب كلمة للبحث..." autocomplete="off">
+<button type="submit">بحث</button>
+</form>
+<div id="status" class="status"></div>
+<div id="results"></div>
+</main>
+<footer>© 2026 RAHAL | رحال</footer>
+<script>
+(function(){
+var SB="https://fiqwenrnvwiiondcztpm.supabase.co";
+var KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
+var CATS={culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف"};
+var LANGN={ar:"العربية",fr:"Français",en:"English"};
+function $(id){return document.getElementById(id)}
+function clean(s){return s.replace(/[(),*%_\\]/g," ").replace(/\s+/g," ").trim()}
+function run(term){
+var out=$("results");
+out.textContent="";
+term=clean(term);
+if(!term){$("status").textContent="";return}
+$("status").textContent="جاري البحث...";
+var pat="*"+term+"*";
+var or="(title.ilike."+pat+",excerpt.ilike."+pat+",body.ilike."+pat+")";
+var url=SB+"/rest/v1/articles?select=slug,lang,title,excerpt,category,created_at&published=eq.true&order=created_at.desc&or="+encodeURIComponent(or);
+fetch(url,{headers:{apikey:KEY}})
+.then(function(r){if(!r.ok)throw 0;return r.json()})
+.then(function(rows){
+if(!rows.length){$("status").textContent="ما لقينا حتى نتيجة لـ «"+term+"»";return}
+$("status").textContent="النتائج: "+rows.length;
+rows.forEach(function(a){
+var c=document.createElement("a");
+c.className="card";
+c.href="article.html?s="+encodeURIComponent(a.slug)+"&lang="+(a.lang||"ar");
+var t=document.createElement("div");t.className="tag";
+t.textContent=(CATS[a.category]||a.category||"")+" • "+(LANGN[a.lang]||a.lang||"");
+var h=document.createElement("h2");h.textContent=a.title;
+var p=document.createElement("p");p.textContent=a.excerpt||"";
+c.appendChild(t);c.appendChild(h);c.appendChild(p);
+out.appendChild(c);
+});
+})
+.catch(function(){$("status").textContent="تعذر البحث، حاول مرة أخرى"});
+}
+$("f").addEventListener("submit",function(e){
+e.preventDefault();
+var v=$("q").value;
+var u=new URL(location.href);
+u.searchParams.set("q",v);
+history.replaceState(null,"",u.toString());
+run(v);
+});
+var init=new URLSearchParams(location.search).get("q")||"";
+$("q").value=init;
+if(init)run(init);
+})();
+</script>
+</body>
+</html>

@@ -38,6 +38,7 @@ p{font-size:18px;margin:0 0 14px}
 <a href="index.html#history" data-k="history"></a>
 <a href="index.html#explore" data-k="explore"></a>
 <a href="about.html" data-k="about"></a>
+<a href="search.html" data-k="search"></a>
 <select id="lang" aria-label="Language">
 <option value="ar">العربية</option>
 <option value="fr">Français</option>
@@ -55,9 +56,9 @@ var slug=params.get("s");
 var pv=params.get("preview");
 var lang=params.get("lang")||"ar";
 var T={
-ar:{home:"الرئيسية",culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف",about:"من نحن",sources:"المراجع والمصادر",notfound:"المقال غير موجود",error:"تعذر تحميل المقال"},
-fr:{home:"Accueil",culture:"Culture",society:"Société",science:"Sciences",history:"Histoire",explore:"Exploration",about:"À propos",sources:"Sources et références",notfound:"Article introuvable",error:"Impossible de charger l'article"},
-en:{home:"Home",culture:"Culture",society:"Society",science:"Science",history:"History",explore:"Exploration",about:"About",sources:"Sources and references",notfound:"Article not found",error:"Could not load the article"}
+ar:{home:"الرئيسية",culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف",about:"من نحن",search:"بحث",sources:"المراجع والمصادر",notfound:"المقال غير موجود",error:"تعذر تحميل المقال"},
+fr:{home:"Accueil",culture:"Culture",society:"Société",science:"Sciences",history:"Histoire",explore:"Exploration",about:"À propos",search:"Recherche",sources:"Sources et références",notfound:"Article introuvable",error:"Impossible de charger l'article"},
+en:{home:"Home",culture:"Culture",society:"Society",science:"Science",history:"History",explore:"Exploration",about:"About",search:"Search",sources:"Sources and references",notfound:"Article not found",error:"Could not load the article"}
 };
 var L=T[lang]?lang:"ar";
 var t=T[L];
