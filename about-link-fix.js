@@ -164,6 +164,11 @@
 
   function run(){ build(); labels(); paintTheme(); }
 
+  var fav=document.createElement("link");
+  fav.rel="icon";
+  fav.type="image/png";
+  fav.href="favicon.png";
+  document.head.appendChild(fav);
   loadTheme();
   var sel=langSel();
   if(sel){ sel.addEventListener("change",function(){ setTimeout(run,50); }); }
