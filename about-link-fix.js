@@ -44,8 +44,9 @@
     ".rahal-tools select{background:transparent !important;color:#fff !important;border:1px solid #fff !important}"+
     ".rahal-tools select option{color:#252827;background:#fff}"+
     ".rahal-lang{display:none;align-items:center;gap:6px}"+
-    ".rahal-lb{width:34px;height:34px;border:1.5px solid #d8b879;border-radius:10px;background:transparent;color:#d8b879;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.3px;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}"+
-    ".rahal-lb.on{background:#d8b879;color:#142c2a}"+
+    ".rahal-lb{width:26px;height:26px;border:1.5px solid #d8b879;border-radius:8px;background:transparent;color:#d8b879;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.2px;cursor:pointer;padding:0;display:inline-flex;align-items:center;justify-content:center}"+
+    ".rahal-lb:hover{background:#d8b879;color:#142c2a}"+
+    ".rahal-lb.hid{display:none !important}"+
     ".rahal-sw{display:inline-flex;align-items:center;margin:0 26px;vertical-align:middle}"+
     ".rahal-sb{background:transparent;border:0;padding:4px;cursor:pointer;opacity:.7;display:inline-flex;align-items:center;justify-content:center}"+
     ".rahal-sb:hover{opacity:1}"+
@@ -111,7 +112,7 @@
   function paintLang(){
     var v=currentLang();
     document.querySelectorAll(".rahal-lb").forEach(function(b){
-      b.classList.toggle("on", b.getAttribute("data-l")===v);
+      b.classList.toggle("hid", b.getAttribute("data-l")===v);
     });
   }
 
