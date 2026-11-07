@@ -21,6 +21,18 @@
   var css=
     "header{display:flex !important;justify-content:space-between !important;align-items:center;flex-wrap:wrap}"+
     "header>nav{flex:1 1 auto}"+
+    "@media (max-width:699px){"+
+      "header{flex-direction:column !important;align-items:center !important;justify-content:center !important;gap:10px !important;padding:12px 10px !important}"+
+      "header img{height:72px !important;width:auto !important}"+
+      "header .logo{margin:0 !important}"+
+      "header>nav{flex:none !important;width:100% !important;flex-wrap:nowrap !important;overflow-x:auto !important;justify-content:flex-start !important;gap:18px !important;padding:6px 4px !important;scrollbar-width:none}"+
+      "header>nav::-webkit-scrollbar{display:none}"+
+      "header>nav a{flex:0 0 auto !important;white-space:nowrap !important}"+
+      ".rahal-sw{margin:0 !important}"+
+      ".rahal-tools{margin:0 !important;display:flex !important;justify-content:center !important;flex-wrap:wrap !important;width:100% !important;gap:8px !important}"+
+      ".rahal-soc a{width:32px !important;height:32px !important}"+
+      ".rahal-tbtn{margin-right:8px !important}"+
+    "}"+
     "@media (min-width:700px){header .logo{margin-right:-72px !important}}"+
     ".rahal-tools{display:inline-flex;align-items:center;gap:10px;margin-left:auto}"+
     "@media (min-width:700px){.rahal-tools.rahal-home{margin-left:-40px !important}}"+
