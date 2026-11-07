@@ -224,6 +224,10 @@
   var FB_SVG='<svg viewBox="0 0 24 24"><path d="M14 22v-8h2.6l.4-3H14V9.2c0-.9.3-1.5 1.5-1.5H17.5V5.1c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4V11H9v3h2.3v8"/></svg>';
   var X_SVG='<svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>';
   var LINK_SVG='<svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>';
+  var TG_SVG='<svg viewBox="0 0 24 24"><path d="M21 4L3 11l6 2.5L11.5 20l3-4 4.5 3.5z"/></svg>';
+  var IN_SVG='<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>';
+  var TH_SVG='<svg viewBox="0 0 24 24"><path d="M16.5 10.5c-.6-2.6-2.4-4-5-4-3.3 0-5.3 2.2-5.3 5.5s2 5.5 5.3 5.5c2.7 0 4.5-1.5 4.5-3.8 0-2.5-2.3-3-4.6-2.5"/></svg>';
+  var MAIL_SVG='<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
 
   var shareCss=
     ".rahal-share{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:14px 0 24px;padding:12px 0;border-top:1px solid rgba(146,113,59,.35);border-bottom:1px solid rgba(146,113,59,.35)}"+
@@ -259,16 +263,19 @@
     function link(name,href,svg){
       var a=document.createElement("a");
       a.href=href;
-      a.target="_blank";
-      a.rel="noopener";
+      if(href.indexOf("http")===0){ a.target="_blank"; a.rel="noopener"; }
       a.title=name;
       a.setAttribute("aria-label",name);
       a.innerHTML=svg;
       box.appendChild(a);
     }
     link("WhatsApp","https://wa.me/?text="+encodeURIComponent(title+" "+url),WA_SVG);
+    link("Telegram","https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(title),TG_SVG);
     link("Facebook","https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url),FB_SVG);
     link("X","https://x.com/intent/post?text="+encodeURIComponent(title)+"&url="+encodeURIComponent(url),X_SVG);
+    link("Threads","https://www.threads.net/intent/post?text="+encodeURIComponent(title+" "+url),TH_SVG);
+    link("LinkedIn","https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(url),IN_SVG);
+    link("Email","mailto:?subject="+encodeURIComponent(title)+"&body="+encodeURIComponent(url),MAIL_SVG);
 
     var b=document.createElement("button");
     b.type="button";
