@@ -4,10 +4,26 @@
     fr:{about:"À propos",ph:"Rechercher...",go:"Chercher",aria:"Rechercher"},
     en:{about:"About",ph:"Search...",go:"Search",aria:"Search"}
   };
+
+  // روابط حسابات التواصل: بدّلها برابط حسابك الحقيقي
+  var SOCIAL=[
+    {name:"WhatsApp",url:"https://wa.me/",svg:'<svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 10c0 2.5 2.5 5 5 5l1-1.2-1.8-.8-.6.6c-.8-.4-1.6-1.2-2-2l.6-.6-.8-1.8z"/></svg>'},
+    {name:"Facebook",url:"https://www.facebook.com/",svg:'<svg viewBox="0 0 24 24"><path d="M14 22v-8h2.6l.4-3H14V9.2c0-.9.3-1.5 1.5-1.5H17.5V5.1c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4V11H9v3h2.3v8"/></svg>'},
+    {name:"Instagram",url:"https://www.instagram.com/",svg:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6"/></svg>'},
+    {name:"TikTok",url:"https://www.tiktok.com/",svg:'<svg viewBox="0 0 24 24"><path d="M15 3c.3 2.4 1.8 3.9 4.5 4.1v3.1c-1.6 0-3.1-.5-4.4-1.3v6.3a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v3.2a2.5 2.5 0 1 0 1.6 2.3V3z"/></svg>'},
+    {name:"YouTube",url:"https://www.youtube.com/",svg:'<svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.5 9.5v5l4-2.5z"/></svg>'},
+    {name:"X",url:"https://x.com/",svg:'<svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>'}
+  ];
+
   var css=
-    ".rahal-sw{display:inline-flex;align-items:center;gap:6px;vertical-align:middle;margin:0 4px}"+
-    ".rahal-sb{background:none;border:1px solid #d8b879;border-radius:50%;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}"+
-    ".rahal-sb svg{width:18px;height:18px;stroke:#d8b879;fill:none;stroke-width:2}"+
+    ".rahal-tools{display:inline-flex;align-items:center;gap:8px;margin-left:auto}"+
+    ".rahal-sw{display:inline-flex;align-items:center;gap:6px;vertical-align:middle}"+
+    ".rahal-soc{display:inline-flex;align-items:center;gap:6px}"+
+    ".rahal-soc a,.rahal-sb{width:36px;height:36px;border:1px solid #d8b879;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;text-decoration:none;background:none}"+
+    ".rahal-soc a:hover,.rahal-sb:hover{background:#d8b879}"+
+    ".rahal-soc svg,.rahal-sb svg{width:18px;height:18px;stroke:#d8b879;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}"+
+    ".rahal-soc a:hover svg,.rahal-sb:hover svg{stroke:#142c2a}"+
+    ".rahal-soc a[href*=youtube] svg path:last-child{fill:#d8b879}"+
     ".rahal-sf{display:none;align-items:center;gap:6px}"+
     ".rahal-sf.open{display:inline-flex}"+
     ".rahal-sf input{width:170px;max-width:50vw;padding:7px 10px;border:1px solid #d8b879;border-radius:6px;background:#fff;color:#252827;font-family:inherit;font-size:14px}"+
@@ -22,8 +38,14 @@
   function currentLang(){ var s=langSel(); return (s && s.value) || "ar"; }
   function L(){ return names[currentLang()] || names.ar; }
 
+  function socialHTML(){
+    return SOCIAL.map(function(s){
+      return '<a href="'+s.url+'" target="_blank" rel="noopener" aria-label="'+s.name+'" title="'+s.name+'">'+s.svg+'</a>';
+    }).join("");
+  }
+
   function build(){
-    if(document.querySelector(".rahal-sw")) return;
+    if(document.querySelector(".rahal-tools")) return;
     var sel=langSel();
     var search=document.querySelector('a[href="search.html"]');
     var about=document.querySelector('a[href="about.html"]');
@@ -38,13 +60,23 @@
         '<button type="submit"></button>'+
       '</form>';
 
+    var soc=document.createElement("span");
+    soc.className="rahal-soc";
+    soc.innerHTML=socialHTML();
+
+    var group=document.createElement("span");
+    group.className="rahal-tools";
+    group.appendChild(wrap);
+    group.appendChild(soc);
+
     if(sel){
-      sel.parentNode.insertBefore(wrap, sel);
+      sel.parentNode.insertBefore(group, sel);
+      group.appendChild(sel);
       if(search && search.parentNode) search.parentNode.removeChild(search);
     } else if(search){
-      search.parentNode.replaceChild(wrap, search);
+      search.parentNode.replaceChild(group, search);
     } else {
-      about.parentNode.insertBefore(wrap, about.nextSibling);
+      about.parentNode.insertBefore(group, about.nextSibling);
     }
 
     var btn=wrap.querySelector(".rahal-sb");
