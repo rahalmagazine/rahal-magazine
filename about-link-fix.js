@@ -232,7 +232,23 @@
     if(g) g.textContent=t.go;
   }
 
-  function run(){ build(); labels(); paintTheme(); paintLang(); }
+  function footerLink(){
+    if(document.querySelector(".rahal-foot")) return;
+    if(!document.getElementById("rahal-foot-css")){
+      var fc=document.createElement("style");
+      fc.id="rahal-foot-css";
+      fc.textContent=".rahal-foot{text-align:center;padding:18px 12px;font-size:14px;background:#142c2a;color:#d8b879;line-height:2}"+
+        ".rahal-foot a{color:#d8b879;text-decoration:none;margin:0 6px}"+
+        ".rahal-foot a:hover{text-decoration:underline}";
+      document.head.appendChild(fc);
+    }
+    var f=document.createElement("div");
+    f.className="rahal-foot";
+    f.innerHTML='<a href="privacy.html">سياسة الخصوصية</a>|<a href="privacy.html#fr">Confidentialité</a>|<a href="privacy.html#en">Privacy Policy</a>';
+    document.body.appendChild(f);
+  }
+
+  function run(){ build(); labels(); paintTheme(); paintLang(); footerLink(); }
 
   var SHARE_T={
     ar:{label:"شارك المقال",copy:"انسخ الرابط",copied:"تم نسخ الرابط"},
