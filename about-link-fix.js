@@ -275,7 +275,59 @@
     about.parentNode.insertBefore(m, about.nextSibling);
   }
 
-  function run(){ build(); labels(); paintTheme(); paintLang(); footerLink(); sectionLinks(); mapLink(); }
+  var FLAB={ar:"مقال مميز",fr:"À la une",en:"Featured"};
+
+  function featuredBlock(){
+    var hero=document.querySelector(".hero");
+    if(!hero) return;
+    if(document.querySelector(".rahal-featured")) return;
+    var lang=currentLang();
+    var box=document.createElement("div");
+    box.className="rahal-featured";
+    hero.parentNode.insertBefore(box, hero.nextSibling);
+
+    var SBU="https://fiqwenrnvwiiondcztpm.supabase.co";
+    var HD={apikey:"sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx"};
+    fetch(SBU+"/rest/v1/articles?select=slug,lang,title,excerpt,image_url,category,created_at"+
+          "&published=eq.true&featured=eq.true&order=created_at.desc&limit=20",{headers:HD})
+    .then(function(r){ return r.json(); })
+    .then(function(rows){
+      var groups={}, order=[];
+      rows.forEach(function(r){
+        if(!groups[r.slug]){ groups[r.slug]=[]; order.push(r.slug); }
+        groups[r.slug].push(r);
+      });
+      if(!order.length){ box.remove(); return; }
+      var g=groups[order[0]];
+      var a=g.find(function(r){ return r.lang===lang; }) || g.find(function(r){ return r.lang==="ar"; }) || g[0];
+
+      var link=document.createElement("a");
+      link.href="article.html?s="+encodeURIComponent(order[0])+"&lang="+encodeURIComponent(a.lang||"ar");
+      if(a.image_url && a.image_url.indexOf("https://")===0){
+        var img=document.createElement("img");
+        img.src=a.image_url;
+        img.alt=a.title||"";
+        link.appendChild(img);
+      }
+      var fb=document.createElement("div");
+      fb.className="fb";
+      var lab=document.createElement("div");
+      lab.className="flab";
+      lab.textContent=(FLAB[lang]||FLAB.ar);
+      var h=document.createElement("h2");
+      h.textContent=a.title||"";
+      var p=document.createElement("p");
+      p.textContent=a.excerpt||"";
+      fb.appendChild(lab);
+      fb.appendChild(h);
+      fb.appendChild(p);
+      link.appendChild(fb);
+      box.appendChild(link);
+    })
+    .catch(function(){ box.remove(); });
+  }
+
+  function run(){ build(); labels(); paintTheme(); paintLang(); footerLink(); sectionLinks(); mapLink(); featuredBlock(); }
 
   var SHARE_T={
     ar:{label:"شارك المقال",copy:"انسخ الرابط",copied:"تم نسخ الرابط"},
@@ -394,7 +446,19 @@
     "html.rahal-dark .rahal-related h2{color:#e8e2d6}"+
     "html.rahal-dark .rahal-related a.rcard{background:#16292a}"+
     "html.rahal-dark #m .rahal-related a.rcard h3{color:#e8e2d6}"+
-    "html.rahal-dark #m .rahal-related a.rcard p{color:#b8c2bf}";
+    "html.rahal-dark #m .rahal-related a.rcard p{color:#b8c2bf}"+
+    ".rahal-featured{max-width:1100px;margin:30px auto;padding:0 20px;box-sizing:border-box}"+
+    ".rahal-featured a{display:grid;grid-template-columns:1fr 1fr;gap:0;background:#fff;border-radius:12px;overflow:hidden;text-decoration:none;color:#252827;box-shadow:0 2px 10px rgba(0,0,0,.08)}"+
+    ".rahal-featured img{width:100%;height:100%;min-height:260px;object-fit:cover;display:block}"+
+    ".rahal-featured .fb{padding:26px 28px;display:flex;flex-direction:column;justify-content:center}"+
+    ".rahal-featured .flab{color:#92713b;font-size:14px;font-weight:700;margin-bottom:8px}"+
+    ".rahal-featured h2{color:#142c2a;font-size:clamp(20px,3vw,28px);line-height:1.5;margin:0 0 10px}"+
+    ".rahal-featured p{font-size:15px;color:#555;margin:0;line-height:1.8}"+
+    ".rahal-featured a:hover h2{color:#92713b}"+
+    "@media (max-width:699px){.rahal-featured a{grid-template-columns:1fr}.rahal-featured img{min-height:200px}}"+
+    "html.rahal-dark .rahal-featured a{background:#16292a;color:#e8e2d6}"+
+    "html.rahal-dark .rahal-featured h2{color:#e8e2d6}"+
+    "html.rahal-dark .rahal-featured p{color:#b8c2bf}";
 
   var FSLAB={ar:"حجم الخط",fr:"Taille du texte",en:"Text size"};
   var FS_STEPS=[0.9,1,1.15,1.3];
