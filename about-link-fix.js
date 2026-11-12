@@ -252,7 +252,18 @@
     f.innerHTML='<a href="privacy.html'+c.h+'">'+c.t+'</a>';
   }
 
-  function run(){ build(); labels(); paintTheme(); paintLang(); footerLink(); }
+  function sectionLinks(){
+    var CATS=["culture","society","science","history","explore"];
+    document.querySelectorAll("a").forEach(function(a){
+      var h=a.getAttribute("href")||"";
+      var m=h.match(/^(?:index\.html)?#(culture|society|science|history|explore)$/);
+      if(m && CATS.indexOf(m[1])>=0){
+        a.setAttribute("href","category.html?c="+m[1]);
+      }
+    });
+  }
+
+  function run(){ build(); labels(); paintTheme(); paintLang(); footerLink(); sectionLinks(); }
 
   var SHARE_T={
     ar:{label:"شارك المقال",copy:"انسخ الرابط",copied:"تم نسخ الرابط"},
