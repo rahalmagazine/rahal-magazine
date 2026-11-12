@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAHAL | رحال</title>
+<meta name="description" content="مقالات مجلة رحال حسب القسم: الثقافة والمجتمع والعلوم والتاريخ والاستكشاف.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P8ZZ24G3DP"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-P8ZZ24G3DP');
+</script>
+<style>
+body{margin:0;background:#f4ebdd;color:#252827;font-family:'Cairo',Arial,sans-serif;line-height:1.9}
+header{background:#142c2a;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header img{height:60px;width:auto;display:block}
+header nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+header nav a{color:#fff;text-decoration:none;font-size:15px}
+header nav a:hover{color:#d8b879}
+select{padding:8px 12px;border-radius:6px;border:1px solid #fff;background:transparent;color:#fff;font-family:inherit}
+select option{color:#252827;background:#fff}
+main{max-width:900px;margin:0 auto;padding:28px 18px 60px}
+h1{color:#142c2a;font-size:clamp(26px,6vw,36px);margin:0 0 22px;padding-bottom:12px;border-bottom:2px solid #d8b879}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{display:block;background:#fff;border-radius:8px;overflow:hidden;text-decoration:none;color:#252827;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.card img{width:100%;height:160px;object-fit:cover;display:block}
+.card .body{padding:14px 16px}
+.card h2{color:#142c2a;font-size:18px;line-height:1.5;margin:0 0 6px}
+.card p{font-size:14px;margin:0;color:#555}
+.card:hover h2{color:#92713b}
+.msg{color:#92713b;font-size:17px;padding:30px 0}
+footer{text-align:center;font-size:14px;color:#92713b;padding:20px}
+html.rahal-dark body{background:#0e1a19;color:#e8e2d6}
+html.rahal-dark h1{color:#e8e2d6}
+html.rahal-dark .card{background:#16292a;color:#e8e2d6}
+html.rahal-dark .card h2{color:#e8e2d6}
+html.rahal-dark .card p{color:#b8c2bf}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html"><img src="rahal-logo-transparent.png" alt="RAHAL رحال"></a>
+  <nav id="nav">
+    <a href="index.html#home" data-k="home"></a>
+    <a href="category.html?c=culture" data-k="culture"></a>
+    <a href="category.html?c=society" data-k="society"></a>
+    <a href="category.html?c=science" data-k="science"></a>
+    <a href="category.html?c=history" data-k="history"></a>
+    <a href="category.html?c=explore" data-k="explore"></a>
+    <a href="about.html" data-k="about"></a>
+    <select id="lang" aria-label="Language">
+      <option value="ar">العربية</option>
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+  </nav>
+</header>
+
+<main id="cm">
+  <h1 id="ctitle"></h1>
+  <div id="list" class="grid"></div>
+</main>
+
+<footer>© 2026 RAHAL | رحال</footer>
+
+<script>
+(function(){
+  var SB="https://fiqwenrnvwiiondcztpm.supabase.co";
+  var KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
+  var params=new URLSearchParams(location.search);
+  var cat=params.get("c")||"culture";
+  var lang=params.get("lang")||"ar";
+
+  var T={
+    ar:{home:"الرئيسية",culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف",about:"من نحن",empty:"ماكاينش مقالات فهاد القسم بعد.",error:"تعذر تحميل المقالات"},
+    fr:{home:"Accueil",culture:"Culture",society:"Société",science:"Sciences",history:"Histoire",explore:"Exploration",about:"À propos",empty:"Aucun article dans cette rubrique pour le moment.",error:"Impossible de charger les articles"},
+    en:{home:"Home",culture:"Culture",society:"Society",science:"Science",history:"History",explore:"Exploration",about:"About",empty:"No articles in this section yet.",error:"Could not load the articles"}
+  };
+  var L=T[lang]?lang:"ar";
+  var t=T[L];
+
+  document.documentElement.lang=L;
+  document.documentElement.dir=(L==="ar")?"rtl":"ltr";
+
+  document.querySelectorAll("#nav a[data-k]").forEach(function(a){
+    a.textContent=t[a.getAttribute("data-k")];
+  });
+
+  var sel=document.getElementById("lang");
+  sel.value=L;
+  sel.addEventListener("change",function(){
+    var p=new URLSearchParams(location.search);
+    p.set("lang",sel.value);
+    location.search=p.toString();
+  });
+
+  var catName=t[cat]||cat;
+  document.getElementById("ctitle").textContent=catName;
+  document.title=catName+" | RAHAL - رحال";
+
+  var list=document.getElementById("list");
+  var url=SB+"/rest/v1/articles?select=slug,lang,title,excerpt,image_url,created_at"+
+    "&category=eq."+encodeURIComponent(cat)+"&published=eq.true&order=created_at.desc";
+
+  fetch(url,{headers:{apikey:KEY}})
+  .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+  .then(function(rows){
+    var groups={}, order=[];
+    rows.forEach(function(r){
+      if(!groups[r.slug]){ groups[r.slug]=[]; order.push(r.slug); }
+      groups[r.slug].push(r);
+    });
+    if(!order.length){
+      list.innerHTML="";
+      var p=document.createElement("p");
+      p.className="msg";
+      p.textContent=t.empty;
+      list.appendChild(p);
+      return;
+    }
+    order.forEach(function(slug){
+      var g=groups[slug];
+      var a=g.find(function(r){ return r.lang===L; }) || g.find(function(r){ return r.lang==="ar"; }) || g[0];
+      var link=document.createElement("a");
+      link.className="card";
+      link.href="article.html?s="+encodeURIComponent(slug)+"&lang="+encodeURIComponent(a.lang||"ar");
+      if(a.image_url && a.image_url.indexOf("https://")===0){
+        var img=document.createElement("img");
+        img.src=a.image_url;
+        img.alt=a.title||"";
+        img.loading="lazy";
+        link.appendChild(img);
+      }
+      var body=document.createElement("div");
+      body.className="body";
+      var h=document.createElement("h2");
+      h.textContent=a.title||slug;
+      var ex=document.createElement("p");
+      ex.textContent=a.excerpt||"";
+      body.appendChild(h);
+      body.appendChild(ex);
+      link.appendChild(body);
+      list.appendChild(link);
+    });
+  })
+  .catch(function(){
+    list.innerHTML="";
+    var p=document.createElement("p");
+    p.className="msg";
+    p.textContent=t.error;
+    list.appendChild(p);
+  });
+})();
+</script>
+
+<script src="about-link-fix.js"></script>
+</body>
+</html>
