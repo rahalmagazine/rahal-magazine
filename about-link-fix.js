@@ -224,6 +224,9 @@
   function labels(){
     var t=L();
     document.querySelectorAll('a[href="about.html"]').forEach(function(a){ a.textContent=t.about; });
+    var MAPT={ar:"الخريطة",fr:"Carte",en:"Map"};
+    var mp=document.querySelector('a[href="map.html"]');
+    if(mp) mp.textContent=(MAPT[currentLang()]||MAPT.ar);
     var b=document.querySelector(".rahal-sb");
     if(b) b.setAttribute("aria-label",t.aria);
     var i=document.querySelector(".rahal-sf input");
@@ -263,7 +266,16 @@
     });
   }
 
-  function run(){ build(); labels(); paintTheme(); paintLang(); footerLink(); sectionLinks(); }
+  function mapLink(){
+    var about=document.querySelector('a[href="about.html"]');
+    if(!about) return;
+    if(document.querySelector('a[href="map.html"]')) return;
+    var m=document.createElement("a");
+    m.href="map.html";
+    about.parentNode.insertBefore(m, about.nextSibling);
+  }
+
+  function run(){ build(); labels(); paintTheme(); paintLang(); footerLink(); sectionLinks(); mapLink(); }
 
   var SHARE_T={
     ar:{label:"شارك المقال",copy:"انسخ الرابط",copied:"تم نسخ الرابط"},
