@@ -375,6 +375,78 @@
     rd.parentNode.insertBefore(box,rd.nextSibling);
   }
 
+  var fsCss=
+    ".rahal-bar{position:fixed;top:0;left:0;height:3px;width:0;background:#d8b879;z-index:9999;transition:width .1s linear}"+
+    ".rahal-fs{display:flex;align-items:center;gap:8px;margin:18px 0 6px;font-size:14px;color:#92713b;font-weight:600}"+
+    ".rahal-fs button{width:34px;height:34px;border:1px solid #92713b;border-radius:8px;background:transparent;color:#92713b;cursor:pointer;font-family:inherit;font-weight:700}"+
+    ".rahal-fs button:hover{background:#92713b;color:#fff}"+
+    "#m p{font-size:calc(18px * var(--rahal-fs,1)) !important}"+
+    "#m h3{font-size:calc(20px * var(--rahal-fs,1)) !important}"+
+    "html.rahal-dark .rahal-fs{color:#d8b879}"+
+    "html.rahal-dark .rahal-fs button{border-color:#d8b879;color:#d8b879}";
+
+  var FSLAB={ar:"حجم الخط",fr:"Taille du texte",en:"Text size"};
+  var FS_STEPS=[0.9,1,1.15,1.3];
+
+  function readingTools(){
+    if(!document.getElementById("rahal-fs-css")){
+      var st3=document.createElement("style");
+      st3.id="rahal-fs-css";
+      st3.textContent=fsCss;
+      document.head.appendChild(st3);
+    }
+    if(!document.querySelector(".rahal-bar")){
+      var bar=document.createElement("div");
+      bar.className="rahal-bar";
+      document.body.appendChild(bar);
+      var upd=function(){
+        var h=document.documentElement;
+        var max=h.scrollHeight-h.clientHeight;
+        bar.style.width=(max>0 ? (h.scrollTop/max)*100 : 0)+"%";
+      };
+      window.addEventListener("scroll",upd,{passive:true});
+      upd();
+    }
+    var cur=parseFloat(localStorage.getItem("rahal-fs")||"1");
+    if(FS_STEPS.indexOf(cur)<0) cur=1;
+    document.documentElement.style.setProperty("--rahal-fs",cur);
+  }
+
+  function addFs(){
+    var m=document.getElementById("m");
+    if(!m || m.querySelector(".rahal-fs")) return;
+    var anchor=m.querySelector(".rahal-share") || m.querySelector("h1");
+    if(!anchor) return;
+
+    var wrap=document.createElement("div");
+    wrap.className="rahal-fs";
+    var lab=document.createElement("span");
+    lab.textContent=(FSLAB[currentLang()]||FSLAB.ar);
+    var minus=document.createElement("button");
+    minus.type="button";
+    minus.textContent="A-";
+    var plus=document.createElement("button");
+    plus.type="button";
+    plus.textContent="A+";
+
+    function setStep(d){
+      var cur=parseFloat(localStorage.getItem("rahal-fs")||"1");
+      var i=FS_STEPS.indexOf(cur);
+      if(i<0) i=1;
+      i=Math.min(FS_STEPS.length-1,Math.max(0,i+d));
+      var v=FS_STEPS[i];
+      localStorage.setItem("rahal-fs",String(v));
+      document.documentElement.style.setProperty("--rahal-fs",v);
+    }
+    minus.addEventListener("click",function(){ setStep(-1); });
+    plus.addEventListener("click",function(){ setStep(1); });
+
+    wrap.appendChild(lab);
+    wrap.appendChild(minus);
+    wrap.appendChild(plus);
+    anchor.parentNode.insertBefore(wrap,anchor.nextSibling);
+  }
+
   function shareInit(){
     var m=document.getElementById("m");
     if(!m) return;
@@ -384,8 +456,10 @@
       st2.textContent=shareCss;
       document.head.appendChild(st2);
     }
+    readingTools();
     addShare();
-    new MutationObserver(function(){ addShare(); }).observe(m,{childList:true});
+    addFs();
+    new MutationObserver(function(){ addShare(); addFs(); }).observe(m,{childList:true});
   }
 
   loadTheme();
