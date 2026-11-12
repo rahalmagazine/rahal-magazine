@@ -383,7 +383,18 @@
     "#m p{font-size:calc(18px * var(--rahal-fs,1)) !important}"+
     "#m h3{font-size:calc(20px * var(--rahal-fs,1)) !important}"+
     "html.rahal-dark .rahal-fs{color:#d8b879}"+
-    "html.rahal-dark .rahal-fs button{border-color:#d8b879;color:#d8b879}";
+    "html.rahal-dark .rahal-fs button{border-color:#d8b879;color:#d8b879}"+
+    ".rahal-related{margin-top:40px;padding-top:20px;border-top:1px solid #c9bdab}"+
+    ".rahal-related h2{color:#142c2a;font-size:20px;margin:0 0 14px}"+
+    ".rahal-related .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}"+
+    ".rahal-related a.rcard{display:block;background:#fff;border-radius:8px;padding:12px 14px;text-decoration:none;color:#252827;box-shadow:0 1px 4px rgba(0,0,0,.08)}"+
+    "#m .rahal-related a.rcard h3{font-size:16px !important;line-height:1.5;margin:0 0 4px;color:#142c2a}"+
+    "#m .rahal-related a.rcard p{font-size:13px !important;margin:0;color:#555}"+
+    "#m .rahal-related a.rcard:hover h3{color:#92713b}"+
+    "html.rahal-dark .rahal-related h2{color:#e8e2d6}"+
+    "html.rahal-dark .rahal-related a.rcard{background:#16292a}"+
+    "html.rahal-dark #m .rahal-related a.rcard h3{color:#e8e2d6}"+
+    "html.rahal-dark #m .rahal-related a.rcard p{color:#b8c2bf}";
 
   var FSLAB={ar:"حجم الخط",fr:"Taille du texte",en:"Text size"};
   var FS_STEPS=[0.9,1,1.15,1.3];
@@ -447,6 +458,64 @@
     anchor.parentNode.insertBefore(wrap,anchor.nextSibling);
   }
 
+  var RLAB={ar:"مقالات مشابهة",fr:"Articles similaires",en:"Related articles"};
+
+  function addRelated(){
+    var m=document.getElementById("m");
+    if(!m || m.querySelector(".rahal-related")) return;
+    var slug=new URLSearchParams(location.search).get("s");
+    if(!slug) return;
+    var lang=currentLang();
+
+    var box=document.createElement("div");
+    box.className="rahal-related";
+    var h=document.createElement("h2");
+    h.textContent=(RLAB[lang]||RLAB.ar);
+    var grid=document.createElement("div");
+    grid.className="rgrid";
+    box.appendChild(h);
+    box.appendChild(grid);
+    m.appendChild(box);
+
+    var SBU="https://fiqwenrnvwiiondcztpm.supabase.co";
+    var HD={apikey:"sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx"};
+
+    fetch(SBU+"/rest/v1/articles?select=category&slug=eq."+encodeURIComponent(slug)+"&limit=1",{headers:HD})
+    .then(function(r){ return r.json(); })
+    .then(function(rows){
+      var cat=rows[0] && rows[0].category;
+      if(!cat){ box.remove(); return null; }
+      return fetch(SBU+"/rest/v1/articles?select=slug,lang,title,excerpt,created_at"+
+          "&category=eq."+encodeURIComponent(cat)+"&published=eq.true"+
+          "&slug=neq."+encodeURIComponent(slug)+"&order=created_at.desc&limit=30",{headers:HD})
+        .then(function(r){ return r.json(); })
+        .then(function(list){
+          var groups={}, order=[];
+          list.forEach(function(r){
+            if(!groups[r.slug]){ groups[r.slug]=[]; order.push(r.slug); }
+            groups[r.slug].push(r);
+          });
+          var slugs=order.slice(0,3);
+          if(!slugs.length){ box.remove(); return; }
+          slugs.forEach(function(sl){
+            var g=groups[sl];
+            var a=g.find(function(r){ return r.lang===lang; }) || g.find(function(r){ return r.lang==="ar"; }) || g[0];
+            var link=document.createElement("a");
+            link.className="rcard";
+            link.href="article.html?s="+encodeURIComponent(sl)+"&lang="+encodeURIComponent(a.lang||"ar");
+            var t=document.createElement("h3");
+            t.textContent=a.title||sl;
+            var p=document.createElement("p");
+            p.textContent=a.excerpt||"";
+            link.appendChild(t);
+            link.appendChild(p);
+            grid.appendChild(link);
+          });
+        });
+    })
+    .catch(function(){ box.remove(); });
+  }
+
   function shareInit(){
     var m=document.getElementById("m");
     if(!m) return;
@@ -459,7 +528,8 @@
     readingTools();
     addShare();
     addFs();
-    new MutationObserver(function(){ addShare(); addFs(); }).observe(m,{childList:true});
+    addRelated();
+    new MutationObserver(function(){ addShare(); addFs(); addRelated(); }).observe(m,{childList:true});
   }
 
   loadTheme();
