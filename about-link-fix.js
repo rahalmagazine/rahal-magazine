@@ -281,6 +281,25 @@
     var hero=document.querySelector(".hero");
     if(!hero) return;
     if(document.querySelector(".rahal-featured")) return;
+    if(!document.getElementById("rahal-featured-css")){
+      var fst=document.createElement("style");
+      fst.id="rahal-featured-css";
+      fst.textContent=
+        ".rahal-featured{max-width:1100px;margin:30px auto;padding:0 20px;box-sizing:border-box}"+
+        ".rahal-featured a,.rahal-featured a:hover,.rahal-featured *{text-decoration:none !important}"+
+        ".rahal-featured a{display:grid !important;grid-template-columns:1.1fr 1fr !important;gap:0 !important;background:#fff !important;border-radius:14px !important;overflow:hidden !important;color:#252827 !important;box-shadow:0 4px 18px rgba(0,0,0,.10) !important;border:0 !important;padding:0 !important;margin:0 !important;min-height:300px}"+
+        ".rahal-featured img{display:block !important;width:100% !important;height:100% !important;max-width:none !important;min-height:300px !important;margin:0 !important;border-radius:0 !important;object-fit:cover !important}"+
+        ".rahal-featured .fb{padding:34px 36px !important;display:flex !important;flex-direction:column !important;justify-content:center !important;text-align:right}"+
+        ".rahal-featured .flab{display:inline-block !important;align-self:flex-start;background:#d8b879;color:#142c2a !important;font-size:13px !important;font-weight:700 !important;padding:4px 12px !important;border-radius:20px;margin:0 0 16px !important}"+
+        ".rahal-featured h2{color:#142c2a !important;font-size:clamp(22px,2.8vw,30px) !important;font-weight:800 !important;line-height:1.5 !important;margin:0 0 14px !important;padding:0 !important;border:0 !important}"+
+        ".rahal-featured p{font-size:16px !important;color:#555 !important;line-height:1.9 !important;margin:0 !important;padding:0 !important;border:0 !important}"+
+        ".rahal-featured a:hover h2{color:#92713b !important}"+
+        "@media (max-width:699px){.rahal-featured a{grid-template-columns:1fr !important}.rahal-featured img{min-height:220px !important}.rahal-featured .fb{padding:22px !important}}"+
+        "html.rahal-dark .rahal-featured a{background:#16292a !important;color:#e8e2d6 !important}"+
+        "html.rahal-dark .rahal-featured h2{color:#e8e2d6 !important}"+
+        "html.rahal-dark .rahal-featured p{color:#b8c2bf !important}";
+      document.head.appendChild(fst);
+    }
     var lang=currentLang();
     var box=document.createElement("div");
     box.className="rahal-featured";
