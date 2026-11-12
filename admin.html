@@ -78,6 +78,7 @@ input[type=checkbox]{width:auto;margin-left:8px}
 <div class="row">
 <div><label>التصنيف</label><select id="f_category"></select></div>
 <div><label>الرابط المختصر (slug)</label><input id="f_slug"></div>
+<div><label>المدينة (للخريطة)</label><select id="f_city"></select></div>
 </div>
 <label>رابط الصورة</label><input id="f_image" placeholder="https://...">
 <label>المصادر (كل مصدر فسطر، والرابط https:// فآخر السطر)</label><textarea id="f_sources" style="min-height:80px"></textarea>
@@ -97,6 +98,7 @@ var SB="https://fiqwenrnvwiiondcztpm.supabase.co";
 var KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
 var STORE="sb-fiqwenrnvwiiondcztpm-auth-token";
 var LANGS=["ar","fr","en"];
+var CITIES_LIST=["فاس","الرباط","الدار البيضاء","مراكش","طنجة","مكناس","أكادير","وجدة","تطوان","الصويرة","شفشاون","ورزازات","الداخلة","العيون"];
 var CATS=[["culture","الثقافة"],["society","المجتمع"],["science","العلوم"],["history","التاريخ"],["explore","الاستكشاف"]];
 
 function $(id){return document.getElementById(id)}
@@ -251,6 +253,7 @@ fillFields();
 
 function fillShared(){
 $("f_category").value=state.shared.category;
+$("f_city").value=state.shared.city||"";
 $("f_slug").value=state.shared.slug;
 $("f_image").value=state.shared.image_url;
 $("f_sources").value=state.shared.sources;
@@ -260,6 +263,7 @@ $("f_slug").readOnly=!!state.isExisting;
 
 function readShared(){
 state.shared.category=$("f_category").value;
+state.shared.city=$("f_city").value;
 state.shared.slug=$("f_slug").value.trim();
 state.shared.image_url=$("f_image").value.trim();
 state.shared.sources=$("f_sources").value;
@@ -279,7 +283,7 @@ state.slug=null;
 state.lang="ar";
 state.drafts={ar:emptyDraft(),fr:emptyDraft(),en:emptyDraft()};
 state.ids={ar:null,fr:null,en:null};
-state.shared={category:"culture",slug:"a"+Date.now().toString(36),image_url:"",sources:"",published:false};
+state.shared={category:"culture",city:"",slug:"a"+Date.now().toString(36),image_url:"",sources:"",published:false};
 $("edTitle").textContent="مقال جديد";
 fillShared();
 fillFields();
@@ -310,6 +314,7 @@ seo_description:r.seo_description||""
 var first=rows[0];
 state.shared={
 category:first.category||"culture",
+city:first.city||"",
 slug:slug,
 image_url:first.image_url||"",
 sources:first.sources||"",
@@ -341,6 +346,7 @@ body:d.body,
 seo_title:d.seo_title.trim(),
 seo_description:d.seo_description.trim(),
 category:state.shared.category,
+city:state.shared.city||null,
 image_url:state.shared.image_url,
 sources:state.shared.sources,
 published:state.shared.published
@@ -360,6 +366,17 @@ Promise.all(ops)
 }
 
 function closeEditor(){loadList()}
+
+var csel=$("f_city");
+var cempty=document.createElement("option");
+cempty.value="";
+cempty.textContent="بدون مدينة";
+csel.appendChild(cempty);
+CITIES_LIST.forEach(function(c){
+  var o=document.createElement("option");
+  o.value=c;o.textContent=c;
+  csel.appendChild(o);
+});
 
 var sel=$("f_category");
 CATS.forEach(function(c){

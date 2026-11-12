@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>خريطة المدن | RAHAL - رحال</title>
+<meta name="description" content="خريطة مجلة رحال: اكتشف مقالات المدن المغربية حسب كل مدينة.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P8ZZ24G3DP"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());
+gtag('config','G-P8ZZ24G3DP');
+</script>
+<style>
+body{margin:0;background:#f4ebdd;color:#252827;font-family:'Cairo',Arial,sans-serif;line-height:1.9}
+header{background:#142c2a;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header img{height:60px;width:auto;display:block}
+header nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+header nav a{color:#fff;text-decoration:none;font-size:15px}
+header nav a:hover{color:#d8b879}
+select{padding:8px 12px;border-radius:6px;border:1px solid #fff;background:transparent;color:#fff;font-family:inherit}
+select option{color:#252827;background:#fff}
+main{max-width:960px;margin:0 auto;padding:28px 18px 60px}
+h1{color:#142c2a;font-size:clamp(26px,6vw,36px);margin:0 0 6px;padding-bottom:12px;border-bottom:2px solid #d8b879}
+.hint{color:#92713b;margin:0 0 16px;font-size:16px}
+#map{height:460px;border-radius:10px;border:1px solid #c9bdab;margin-bottom:24px;z-index:1}
+#cityBox h2{color:#142c2a;font-size:22px;margin:0 0 12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{display:block;background:#fff;border-radius:8px;padding:14px 16px;text-decoration:none;color:#252827;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.card h3{color:#142c2a;font-size:17px;line-height:1.5;margin:0 0 4px}
+.card p{font-size:14px;margin:0;color:#555}
+.card:hover h3{color:#92713b}
+.msg{color:#92713b;font-size:16px;padding:10px 0}
+footer{text-align:center;font-size:14px;color:#92713b;padding:20px}
+html.rahal-dark body{background:#0e1a19;color:#e8e2d6}
+html.rahal-dark h1,html.rahal-dark #cityBox h2{color:#e8e2d6}
+html.rahal-dark .card{background:#16292a;color:#e8e2d6}
+html.rahal-dark .card h3{color:#e8e2d6}
+html.rahal-dark .card p{color:#b8c2bf}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html"><img src="rahal-logo-transparent.png" alt="RAHAL رحال"></a>
+  <nav id="nav">
+    <a href="index.html#home" data-k="home"></a>
+    <a href="category.html?c=culture" data-k="culture"></a>
+    <a href="category.html?c=society" data-k="society"></a>
+    <a href="category.html?c=science" data-k="science"></a>
+    <a href="category.html?c=history" data-k="history"></a>
+    <a href="category.html?c=explore" data-k="explore"></a>
+    <a href="about.html" data-k="about"></a>
+    <select id="lang" aria-label="Language">
+      <option value="ar">العربية</option>
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+  </nav>
+</header>
+
+<main id="cm">
+  <h1 id="ptitle"></h1>
+  <p class="hint" id="phint"></p>
+  <div id="map"></div>
+  <div id="cityBox"></div>
+</main>
+
+<footer>© 2026 RAHAL | رحال</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+  var SB="https://fiqwenrnvwiiondcztpm.supabase.co";
+  var KEY="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
+  var params=new URLSearchParams(location.search);
+  var lang=params.get("lang")||"ar";
+
+  // إحداثيات المدن: لازم الاسم يكون نفسو فخانة المدينة فلوحة الإدارة
+  var CITIES={
+    "فاس":[34.0331,-5.0003],
+    "الرباط":[34.0209,-6.8416],
+    "الدار البيضاء":[33.5731,-7.5898],
+    "مراكش":[31.6295,-7.9811],
+    "طنجة":[35.7595,-5.834],
+    "مكناس":[33.8935,-5.5473],
+    "أكادير":[30.4278,-9.5981],
+    "وجدة":[34.6814,-1.9086],
+    "تطوان":[35.5785,-5.3684],
+    "الصويرة":[31.5085,-9.7595],
+    "شفشاون":[35.1688,-5.2636],
+    "ورزازات":[30.9335,-6.937],
+    "الداخلة":[23.6848,-15.9579],
+    "العيون":[27.1536,-13.2033]
+  };
+
+  var T={
+    ar:{home:"الرئيسية",culture:"الثقافة",society:"المجتمع",science:"العلوم",history:"التاريخ",explore:"الاستكشاف",about:"من نحن",
+        title:"خريطة المدن",hint:"اضغط على المدينة باش تشوف مقالاتها.",none:"لا توجد مقالات لهذه المدينة بعد.",empty:"لا توجد مقالات بعد.",error:"تعذر تحميل الخريطة",count:"مقال"},
+    fr:{home:"Accueil",culture:"Culture",society:"Société",science:"Sciences",history:"Histoire",explore:"Exploration",about:"À propos",
+        title:"Carte des villes",hint:"Cliquez sur une ville pour voir ses articles.",none:"Aucun article pour cette ville pour le moment.",empty:"Aucun article pour le moment.",error:"Impossible de charger la carte",count:"article(s)"},
+    en:{home:"Home",culture:"Culture",society:"Society",science:"Science",history:"History",explore:"Exploration",about:"About",
+        title:"City map",hint:"Click a city to see its articles.",none:"No articles for this city yet.",empty:"No articles yet.",error:"Could not load the map",count:"article(s)"}
+  };
+  var LG=T[lang]?lang:"ar";
+  var t=T[LG];
+
+  document.documentElement.lang=LG;
+  document.documentElement.dir=(LG==="ar")?"rtl":"ltr";
+  document.querySelectorAll("#nav a[data-k]").forEach(function(a){
+    a.textContent=t[a.getAttribute("data-k")];
+  });
+  var sel=document.getElementById("lang");
+  sel.value=LG;
+  sel.addEventListener("change",function(){
+    var p=new URLSearchParams(location.search);
+    p.set("lang",sel.value);
+    location.search=p.toString();
+  });
+
+  document.getElementById("ptitle").textContent=t.title;
+  document.getElementById("phint").textContent=t.hint;
+  document.title=t.title+" | RAHAL - رحال";
+
+  var map=L.map("map").setView([31.8,-6.5],5);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    maxZoom:12,
+    attribution:"&copy; OpenStreetMap"
+  }).addTo(map);
+
+  var box=document.getElementById("cityBox");
+  var url=SB+"/rest/v1/articles?select=slug,lang,title,excerpt,city,created_at"+
+    "&published=eq.true&city=not.is.null&order=created_at.desc";
+
+  fetch(url,{headers:{apikey:KEY}})
+  .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+  .then(function(rows){
+    // نجمع المقالات حسب المدينة ثم حسب الرابط المختصر
+    var byCity={};
+    rows.forEach(function(r){
+      if(!r.city) return;
+      byCity[r.city]=byCity[r.city]||{};
+      var g=byCity[r.city];
+      g[r.slug]=g[r.slug]||[];
+      g[r.slug].push(r);
+    });
+
+    Object.keys(byCity).forEach(function(city){
+      var coords=CITIES[city];
+      if(!coords) return;
+      var count=Object.keys(byCity[city]).length;
+      var m=L.marker(coords).addTo(map);
+      m.bindTooltip(city+" ("+count+" "+t.count+")");
+      m.on("click",function(){ showCity(city); });
+    });
+
+    function pick(group){
+      return group.find(function(r){ return r.lang===LG; }) || group.find(function(r){ return r.lang==="ar"; }) || group[0];
+    }
+
+    function showCity(city){
+      box.innerHTML="";
+      var h=document.createElement("h2");
+      h.textContent=city;
+      box.appendChild(h);
+      var g=byCity[city]||{};
+      var slugs=Object.keys(g);
+      if(!slugs.length){
+        var p=document.createElement("p");
+        p.className="msg";
+        p.textContent=t.none;
+        box.appendChild(p);
+        return;
+      }
+      var grid=document.createElement("div");
+      grid.className="cards";
+      slugs.forEach(function(slug){
+        var a=pick(g[slug]);
+        var link=document.createElement("a");
+        link.className="card";
+        link.href="article.html?s="+encodeURIComponent(slug)+"&lang="+encodeURIComponent(a.lang||"ar");
+        var h3=document.createElement("h3");
+        h3.textContent=a.title||slug;
+        var p2=document.createElement("p");
+        p2.textContent=a.excerpt||"";
+        link.appendChild(h3);
+        link.appendChild(p2);
+        grid.appendChild(link);
+      });
+      box.appendChild(grid);
+    }
+
+    if(!Object.keys(byCity).length){
+      var none=document.createElement("p");
+      none.className="msg";
+      none.textContent=t.empty;
+      box.appendChild(none);
+    }
+  })
+  .catch(function(){
+    var p=document.createElement("p");
+    p.className="msg";
+    p.textContent=t.error;
+    box.appendChild(p);
+  });
+})();
+</script>
+
+<script src="about-link-fix.js"></script>
+</body>
+</html>
