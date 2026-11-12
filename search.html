@@ -66,7 +66,7 @@ var url=SB+"/rest/v1/articles?select=slug,lang,title,excerpt,category,created_at
 fetch(url,{headers:{apikey:KEY}})
 .then(function(r){if(!r.ok)throw 0;return r.json()})
 .then(function(rows){
-if(!rows.length){$("status").textContent="ما لقينا حتى نتيجة لـ «"+term+"»";return}
+if(!rows.length){$("status").textContent="لم نجد أي نتيجة لـ «"+term+"»";return}
 $("status").textContent="النتائج: "+rows.length;
 rows.forEach(function(a){
 var c=document.createElement("a");
@@ -80,7 +80,7 @@ c.appendChild(t);c.appendChild(h);c.appendChild(p);
 out.appendChild(c);
 });
 })
-.catch(function(){$("status").textContent="تعذر البحث، حاول مرة أخرى"});
+.catch(function(){$("status").textContent="تعذر البحث، يرجى المحاولة مرة أخرى"});
 }
 $("f").addEventListener("submit",function(e){
 e.preventDefault();
