@@ -18,6 +18,14 @@
     md.setAttribute("content",desc);
   }
 
+  var SBN="https://fiqwenrnvwiiondcztpm.supabase.co";
+  var KEYN="sb_publishable_cxciqxe-xfZhDAb8FcGAZA_DzqqCpcx";
+  var NL={
+    ar:{title:"اشترك فالنشرة البريدية",ph:"بريدك الإلكتروني",btn:"اشترك",ok:"شكرا، تسجلتي بنجاح!",dup:"أنت مسجل بالفعل.",bad:"أدخل بريدا إلكترونيا صحيحا.",err:"تعذر الاشتراك، حاول مرة أخرى."},
+    fr:{title:"Abonnez-vous à la newsletter",ph:"Votre adresse e-mail",btn:"S'abonner",ok:"Merci, votre inscription est confirmée !",dup:"Vous êtes déjà inscrit.",bad:"Veuillez saisir une adresse e-mail valide.",err:"Inscription impossible, réessayez."},
+    en:{title:"Subscribe to the newsletter",ph:"Your email address",btn:"Subscribe",ok:"Thanks, you are subscribed!",dup:"You are already subscribed.",bad:"Please enter a valid email address.",err:"Subscription failed, please try again."}
+  };
+
   var names={
     ar:{about:"من نحن",ph:"اكتب كلمة للبحث...",go:"بحث",aria:"بحث"},
     fr:{about:"À propos",ph:"Rechercher...",go:"Chercher",aria:"Rechercher"},
@@ -241,7 +249,13 @@
       fc.id="rahal-foot-css";
       fc.textContent=".rahal-foot{text-align:center;padding:18px 12px;font-size:14px;background:#142c2a;color:#d8b879;line-height:2}"+
         ".rahal-foot a{color:#d8b879;text-decoration:none}"+
-        ".rahal-foot a:hover{text-decoration:underline}";
+        ".rahal-foot a:hover{text-decoration:underline}"+
+        ".rahal-nl{max-width:480px;margin:0 auto 14px;text-align:center}"+
+        ".rahal-nl .nl-title{font-weight:700;margin-bottom:8px;font-size:15px}"+
+        ".rahal-nl .nl-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}"+
+        ".rahal-nl .nl-in{padding:9px 12px;border-radius:8px;border:1px solid #d8b879;min-width:220px;font-family:inherit;font-size:14px;background:#fff;color:#252827}"+
+        ".rahal-nl .nl-btn{padding:9px 18px;border:0;border-radius:8px;background:#d8b879;color:#142c2a;font-weight:700;cursor:pointer;font-family:inherit}"+
+        ".rahal-nl .nl-msg{font-size:13px;margin-top:8px;min-height:18px;color:#d8b879}";
       document.head.appendChild(fc);
     }
     var P={ar:{t:"سياسة الخصوصية",h:""},fr:{t:"Politique de confidentialité",h:"#fr"},en:{t:"Privacy Policy",h:"#en"}};
@@ -252,7 +266,52 @@
       f.className="rahal-foot";
       document.body.appendChild(f);
     }
-    f.innerHTML='<a href="privacy.html'+c.h+'">'+c.t+'</a>';
+    var pl=f.querySelector(".rahal-pl");
+    if(!pl){
+      pl=document.createElement("div");
+      pl.className="rahal-pl";
+      f.appendChild(pl);
+    }
+    pl.innerHTML='<a href="privacy.html'+c.h+'">'+c.t+'</a>';
+    newsletterBlock(f);
+  }
+
+  function newsletterBlock(f){
+    var t=NL[currentLang()]||NL.ar;
+    var nl=f.querySelector(".rahal-nl");
+    if(!nl){
+      nl=document.createElement("form");
+      nl.className="rahal-nl";
+      nl.innerHTML='<div class="nl-title"></div>'+
+        '<div class="nl-row"><input type="email" class="nl-in" required><button type="submit" class="nl-btn"></button></div>'+
+        '<div class="nl-msg"></div>';
+      f.insertBefore(nl,f.firstChild);
+      nl.addEventListener("submit",function(e){
+        e.preventDefault();
+        var tt=NL[currentLang()]||NL.ar;
+        var msg=nl.querySelector(".nl-msg");
+        var input=nl.querySelector(".nl-in");
+        var email=input.value.trim();
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+          msg.textContent=tt.bad;
+          return;
+        }
+        fetch(SBN+"/rest/v1/subscribers",{
+          method:"POST",
+          headers:{apikey:KEYN,"Content-Type":"application/json",Prefer:"return=minimal"},
+          body:JSON.stringify({email:email,lang:currentLang()})
+        })
+        .then(function(r){
+          if(r.ok){ msg.textContent=tt.ok; input.value=""; return; }
+          if(r.status===409){ msg.textContent=tt.dup; return; }
+          msg.textContent=tt.err;
+        })
+        .catch(function(){ msg.textContent=tt.err; });
+      });
+    }
+    nl.querySelector(".nl-title").textContent=t.title;
+    nl.querySelector(".nl-in").placeholder=t.ph;
+    nl.querySelector(".nl-btn").textContent=t.btn;
   }
 
   function sectionLinks(){
